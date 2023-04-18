@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/04/18 02:31:08 by melkholy         ###   ########.fr       */
+/*   Updated: 2023/04/18 18:43:45 by melkholy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,27 +56,105 @@ int	ft_isnspace_indx(char *in_put)
 // 		count ++;
 // 	}
 // 	return (count);
-// }
 
-char	*ft_lexer(t_cmds *cmd, char *in_put)
+char	*ft_expansion(char *str, t_env *env_list)
+{
+	t_env	*tmp;
+
+	tmp = env_list;
+	while (tmp)
+	{
+		if (!ft_strncmp(str, tmp->var, ft_strlen(str)))
+		{
+			free(str);
+			return (ft_strdup(tmp->value));
+		}
+		tmp = tmp->next;
+	}
+	free(str);
+	return (ft_strdup(""));
+}
+
+char	*ft_expansion_join(char *str, char *tmp, t_env *env_list)
+{
+	if (tmp)
+	{
+		tmp = ft_expansion(tmp, env_list);
+		str = ft_strjoin_free(str, tmp);
+		free(tmp);
+	}
+	return (str);
+}
+
+char	*ft_check_expand(char *str, char *in_put, int *index, t_env *env_list)
+{
+	char	*tmp;
+	char	divid;
+	int		count;
+
+	divid = in_put[0];
+	count = 0;
+	tmp = NULL;
+	while (in_put[++count] && in_put[count] != divid)
+	{
+		if (divid == '"' && in_put[count] == '$')
+		{
+			while (in_put[++count] && ft_isalnum(in_put[count]))
+				tmp = ft_strjoin_free(tmp, ft_substr(&in_put[count], 0, 1));
+			str = ft_expansion_join(str, tmp, env_list);
+			if (in_put[count] == divid)
+				count --;
+		}
+		else
+			str = ft_strjoin_free(str, ft_substr(&in_put[count], 0, 1));
+	}
+	*index = *index + count - 1;
+	return (str);
+}
+
+char	*ft_noqoute_expand(char *in_put, char *str, int *index, t_env *env_list)
+{
+	char	*tmp;
+	int		count;
+	int		len;
+
+	count = 0;
+	tmp = NULL;
+	while (in_put[++count] && ft_isalnum(in_put[count]))
+		tmp = ft_strjoin_free(tmp, ft_substr(&in_put[count], 0, 1));
+	if (tmp)
+		len = ft_strlen(tmp);
+	str = ft_expansion_join(str, tmp, env_list);
+	*index = *index + count - 1;
+	return (str);
+}
+
+char	*ft_lexer(t_cmds *cmd, char *in_put, t_env *env_list)
 {
 	char	*str;
+	char	*tmp;
 	char	divid;
 	int		count;
 
 	count = -1;
 	divid = 0;
+	tmp = NULL;
 	str = (char *)ft_calloc(1, sizeof(char));
 	while (in_put[++count] && in_put[count] != ' ')
 	{
 		if (in_put[count] == '"' || in_put[count] == '\'')
 		{
-			divid = in_put[count];
-			while (in_put[++count] && in_put[count] != divid)
-				str = ft_strjoin_free(str, ft_substr(&in_put[count], 0, 1));
+			str = ft_check_expand(str, &in_put[count], &count, env_list);
+			// if (in_put[count + 1])
+			// 	count --;
 		}
 		else
-			str = ft_strjoin_free(str, ft_substr(&in_put[count], 0, 1));
+		{
+			if (in_put[count] == '$')
+				str = ft_noqoute_expand(in_put, str, &count, env_list);
+			else
+				str = ft_strjoin_free(str, ft_substr(&in_put[count], 0, 1));
+		}
 	}
 	cmd->skip_char += count;
 	if (in_put[count])
@@ -119,14 +197,14 @@ int	ft_in_redirection(char *in_put)
 	return (result);
 }
 
-void	ft_add_inredirect(char *in_put, t_cmds *cmd, int redirect)
+void	ft_add_inredirect(char *in_put, t_cmds *cmd, int redirect, t_env *env_list)
 {
 	if ((redirect & INPUT) == INPUT)
-		cmd->from_file = ft_lexer(cmd, &in_put[cmd->skip_char]);
+		cmd->from_file = ft_lexer(cmd, &in_put[cmd->skip_char], env_list);
 	else if ((redirect & HEREDOC) == HEREDOC)
-		cmd->hdocs_end = ft_lexer(cmd, &in_put[cmd->skip_char]);
+		cmd->hdocs_end = ft_lexer(cmd, &in_put[cmd->skip_char], env_list);
 	else if ((redirect & OUTPUT) == OUTPUT || (redirect & APPEND) == APPEND)
-		cmd->to_file = ft_lexer(cmd, &in_put[cmd->skip_char]);
+		cmd->to_file = ft_lexer(cmd, &in_put[cmd->skip_char], env_list);
 	cmd->redirect |= redirect;
 }
 
@@ -150,7 +228,7 @@ void	ft_arrange_args(t_cmds *cmd, int index, int len)
 		cmd->args[index] = cmd->args[index + 1];
 }
 
-void	ft_after_redirect(t_cmds *cmd)
+void	ft_after_redirect(t_cmds *cmd, t_env *env_list)
 {
 	int		count;
 	int		len;
@@ -168,16 +246,16 @@ void	ft_after_redirect(t_cmds *cmd)
 				len ++;
 			cmd->skip_char = 0;
 			if (cmd->args[count][len])
-				ft_add_inredirect(&cmd->args[count][len], cmd, redirect);
+				ft_add_inredirect(&cmd->args[count][len], cmd, redirect, env_list);
 			else
-				ft_add_inredirect(cmd->args[count + 1], cmd, redirect);
+				ft_add_inredirect(cmd->args[count + 1], cmd, redirect, env_list);
 			ft_arrange_args(cmd, count, len);
 			count --;
 		}
 	}
 }
 
-int	ft_get_args(t_cmds *cmd, char *in_put)
+int	ft_get_args(t_cmds *cmd, char *in_put, t_env *env_list)
 {
 	int	count;
 
@@ -188,7 +266,7 @@ int	ft_get_args(t_cmds *cmd, char *in_put)
 	cmd->args = (char **)ft_calloc(2, sizeof(char *));
 	while (in_put[cmd->skip_char])
 	{
-		cmd->args[count] = ft_lexer(cmd, &in_put[cmd->skip_char]);
+		cmd->args[count] = ft_lexer(cmd, &in_put[cmd->skip_char], env_list);
 		count ++;
 		cmd->skip_char += ft_isnspace_indx(&in_put[cmd->skip_char]);
 		cmd->args = ft_double_realloc(cmd->args, count + 1, count + 2);
@@ -203,9 +281,9 @@ t_cmds	*ft_parser(char *in_put, t_env *env_list)
 	(void) env_list;
 	cmd = (t_cmds *)ft_calloc(1, sizeof(t_cmds));
 	cmd->skip_char = ft_isnspace_indx(in_put);
-	cmd->cmd = ft_lexer(cmd, &in_put[cmd->skip_char]);
-	ft_get_args(cmd, in_put);
-	ft_after_redirect(cmd);
+	cmd->cmd = ft_lexer(cmd, &in_put[cmd->skip_char], env_list);
+	ft_get_args(cmd, in_put, env_list);
+	ft_after_redirect(cmd, env_list);
 	return (cmd);
 }
 
@@ -223,7 +301,7 @@ void	ft_free_dstr(char **str)
 	free(str);
 }
 
-t_cmds	*ft_redirect_cmd(char *in_put)
+t_cmds	*ft_redirect_cmd(char *in_put, t_env *env_list)
 {
 	t_cmds	*cmd;
 	int		len;
@@ -242,11 +320,11 @@ t_cmds	*ft_redirect_cmd(char *in_put)
 	cmd = (t_cmds *)ft_calloc(1, sizeof(t_cmds));
 	len += ft_isnspace_indx(&in_put[len]);
 	cmd->skip_char = len;
-	ft_add_inredirect(in_put, cmd, redirect);
+	ft_add_inredirect(in_put, cmd, redirect, env_list);
 	cmd->skip_char += ft_isnspace_indx(&in_put[len]);
-	cmd->cmd = ft_lexer(cmd, &in_put[cmd->skip_char]);
-	ft_get_args(cmd, in_put);
-	ft_after_redirect(cmd);
+	cmd->cmd = ft_lexer(cmd, &in_put[cmd->skip_char], env_list);
+	ft_get_args(cmd, in_put, env_list);
+	ft_after_redirect(cmd, env_list);
 	cmd->next = NULL;
 	return (cmd);
 }
@@ -262,14 +340,14 @@ t_cmds	*ft_many_cmd(char *in_put, t_env *env_list)
 
 	many_cmd = ft_split(in_put, '|');
 	count = 0;
-	cmds = ft_redirect_cmd(many_cmd[count]);
+	cmds = ft_redirect_cmd(many_cmd[count], env_list);
 	if (!cmds)
 		cmds = ft_parser(many_cmd[count], env_list);
 	tmp = cmds;
 	count ++;
 	while (many_cmd[count])
 	{
-		tmp->next = ft_redirect_cmd(many_cmd[count]);
+		tmp->next = ft_redirect_cmd(many_cmd[count], env_list);
 		if (!tmp->next)
 			tmp->next = ft_parser(many_cmd[count], env_list);
 		tmp = tmp->next;
@@ -288,8 +366,8 @@ t_env	*ft_create_envnode(char *envp, int index)
 	if(!node)
 		return (NULL);
 	str = ft_split(envp, '=');
-	node->var = strdup(str[0]);
-	node->value = strdup(str[1]);
+	node->var = ft_strdup(str[0]);
+	node->value = ft_strdup(str[1]);
 	node->index = index;
 	ft_free_dstr(str);
 	return (node);
@@ -316,79 +394,88 @@ t_env	*ft_get_envp(char **envp)
 	return (head);
 }
 
-char	*ft_expansion(char *str, t_env *env_list)
-{
-	t_env	*tmp;
+// char	*ft_expansion(char *str, t_env *env_list)
+// {
+// 	t_env	*tmp;
+//
+// 	tmp = env_list;
+// 	while (tmp)
+// 	{
+// 		if (!ft_strncmp(str, tmp->var, ft_strlen(tmp->var)))
+// 		{
+// 			free(str);
+// 			return (ft_strdup(tmp->value));
+// 		}
+// 		tmp = tmp->next;
+// 	}
+// 	return (str);
+// }
+//
+// char	*ft_get_expand(t_env *env_list, int index, char *str, char *in_put)
+// {
+// 	if (in_put[index] == '\'' || in_put[index] == '"')
+// 		str = ft_strtrim(ft_expansion(str, env_list), "'");
+// 	else
+// 		str = ft_expansion(str, env_list);
+// 	return (str);
+// }
 
-	tmp = env_list;
-	while (tmp)
-	{
-		if (!ft_strncmp(str, tmp->var, ft_strlen(tmp->var)))
-		{
-			free(str);
-			return (ft_strdup(tmp->value));
-		}
-		tmp = tmp->next;
-	}
-	return (str);
-}
+// char	*ft_find_expansion(t_env *env_list, char *in_put, int count)
+// {
+// 	char	*tmp;
+// 	char	*str;
+// 	int		len;
+//
+// 	len = 0;
+// 	str = NULL;
+// 	tmp = ft_substr(in_put, 0, count);
+// 	while (in_put[++count] && in_put[count] != '"' && in_put[count] != '\'')
+// 		str = ft_strjoin_free(str, ft_substr(&in_put[count], 0, 1));
+// 	if (str)
+// 	{
+// 		len = ft_strlen(str) + 1;
+// 		str = ft_get_expand(env_list, count - 1 - len, str, in_put);
+// 		tmp = ft_strjoin_free(tmp, str);
+// 		tmp = ft_strjoin_free(tmp, ft_substr(in_put, count, ft_strlen(in_put)));
+// 		count += (ft_strlen(str) - len);
+// 		free(str);
+// 	}
+// 	else
+// 	{
+// 		free(tmp);
+// 		return (NULL);
+// 	}
+// 	return (tmp);
+// }
 
-char	*ft_find_expansion(t_env *env_list, char *in_put, int count)
-{
-	char	*tmp;
-	char	*str;
-	int		len;
-
-	len = 0;
-	str = NULL;
-	tmp = ft_substr(in_put, 0, count);
-	while (in_put[++count] && in_put[count] != '"' && in_put[count] != '\'')
-		str = ft_strjoin_free(str, ft_substr(&in_put[count], 0, 1));
-	if (str)
-	{
-		len = ft_strlen(str) + 1;
-		str = ft_expansion(str, env_list);
-		tmp = ft_strjoin_free(tmp, str);
-		tmp = ft_strjoin_free(tmp, ft_substr(in_put, count, ft_strlen(in_put)));
-		count += (ft_strlen(str) - len);
-		free(str);
-	}
-	else
-	{
-		free(tmp);
-		return (NULL);
-	}
-	return (tmp);
-}
-
-char	*ft_check_expand(char *in_put, t_env *env_list)
-{
-	char	*str;
-	int		count;
-
-	count = -1;
-	while (in_put[++count])
-	{
-		if (in_put[count] == '"' ||
-				(in_put[count] == '$' && in_put[count - 1] != '\''))
-		{
-			if (in_put[count] == '"')
-				count ++;
-			while (in_put[count] && in_put[count] != '"' && in_put[count] != '$')
-				count ++;
-			if (in_put[count] == '$')
-			{
-				str = ft_find_expansion(env_list, in_put, count);
-				if (str)
-				{
-					free(in_put);
-					in_put = str;
-				}
-			}
-		}
-	}
-	return (in_put);
-}
+// char	*ft_check_expand(char *in_put, t_env *env_list)
+// {
+// 	char	*str;
+// 	int		count;
+//
+// 	count = -1;
+// 	while (in_put[++count])
+// 	{
+// 		if (in_put[count] == '"' ||
+// 				(in_put[count] == '$' && in_put[count - 1] != '\''))
+// 		{
+// 			if (in_put[count] == '"')
+// 				count ++;
+// 			while (in_put[count] && in_put[count] != '"' && in_put[count] != '$')
+// 				count ++;
+// 			if (in_put[count] == '$')
+// 			{
+// 				str = ft_find_expansion(env_list, in_put, count);
+// 				if (str)
+// 				{
+// 					free(in_put);
+// 					in_put = str;
+// 				}
+// 			}
+// 		}
+// 	}
+// 	return (in_put);
+// }
 
 /* Used to check the input and pass it to the parsing and cutting
  functions to get back either a linked list with all the command original
@@ -405,13 +492,14 @@ void	ft_parse_input(char *in_put, char **envp)
 	if (!in_put[count])
 		return ;
 	env_list = ft_get_envp(envp);
-	in_put = ft_check_expand(in_put, env_list);
+	// in_put = ft_check_expand(in_put, env_list);
 	if (ft_strchr(&in_put[count], '|'))
 		cmd = ft_many_cmd(&in_put[count], env_list);
 	else if (in_put[count] == '<' || in_put[count] == '>')
-		cmd = ft_redirect_cmd(&in_put[count]);
+		cmd = ft_redirect_cmd(&in_put[count], env_list);
 	else
 		cmd = ft_parser(&in_put[count], env_list);
+	free(in_put);
 	/* The rest of the function is for demonstration purposes
 	  to make sure the lexer is working well*/
 	tmp = cmd;
