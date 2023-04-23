@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/04/18 11:38:05 by melkholy         ###   ########.fr       */
+/*   Updated: 2023/04/23 01:55:19 by melkholy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	ft_closing_qoutes(char *in_put)
 	int		count;
 	int		closing;
 
-	count = 0;
+	count = -1;
 	closing = 0;
 	while (in_put[++count])
 	{

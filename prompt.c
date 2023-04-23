@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/04/18 18:43:45 by melkholy         ###   ########.fr       */
+/*   Updated: 2023/04/23 01:50:29 by melkholy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -168,9 +168,9 @@ char	**ft_double_realloc(char **str, int old_size, int new_size)
 	char	**tmp;
 	int		count;
 
-	tmp = (char **)ft_calloc(new_size, sizeof(char *));
+	tmp = (char **)ft_calloc(sizeof(char *), new_size);
 	count = 0;
-	while (count < old_size - 1)
+	while (count < old_size)
 	{
 		tmp[count] = ft_strdup(str[count]);
 		free(str[count]);
@@ -274,17 +274,148 @@ int	ft_get_args(t_cmds *cmd, char *in_put, t_env *env_list)
 	return (0);
 }
 
+char	*ft_join_free_both(char *s1, char *s2)
+{
+	char	*nstr;
+	size_t	len_s1;
+	size_t	len_s2;
+
+	if (!s1)
+		s1 = (char *)ft_calloc(1, sizeof(char));
+	if (!s1 || !s2)
+		return (NULL);
+	len_s1 = ft_strlen(s1);
+	len_s2 = ft_strlen(s2);
+	nstr = (char *)malloc((len_s1 + len_s2 + 1) * sizeof(char));
+	if (!nstr)
+		return (NULL);
+	ft_strlcpy(nstr, s1, len_s1 + 1);
+	ft_strlcpy(&nstr[len_s1], s2, len_s2 + 1);
+	free(s1);
+	free(s2);
+	return (nstr);
+}
+
+char	*ft_get_expand_var(char *in_put, int *index, t_env *env_list)
+{
+	char	*str;
+	int		count;
+
+	count = *index;
+	str = NULL;
+	while (in_put[++count] && ft_isalnum(in_put[count]))
+		str = ft_join_free_both(str, ft_substr(&in_put[count], 0, 1));
+	*index = count - 1;
+	return (ft_expansion(str, env_list));
+}
+
+char	*ft_inside_qoutes(char *str, char *in_put, int *index, t_env *env_list)
+{
+	char	*tmp;
+	char	divid;
+	int		count;
+
+	count = *index;
+	divid = in_put[count];
+	while (in_put[++count] && in_put[count] != divid)
+	{
+		tmp = NULL;
+		if (in_put[count] == '$' && divid == '"')
+			tmp = ft_get_expand_var(in_put, &count, env_list);
+		if (tmp)
+			str = ft_join_free_both(str, tmp);
+		else
+			str = ft_join_free_both(str, ft_substr(&in_put[count], 0, 1));
+	}
+	*index = count;
+	return (str);
+}
+
+char	**ft_cmd_table(char **cmd_table, char *str, int index)
+{
+	cmd_table[index] = ft_strdup(str);
+	cmd_table = ft_double_realloc(cmd_table, index + 1, index + 2);
+	free(str);
+	return (cmd_table);
+}
+
+char	*ft_tokenize(char *in_put, int *index, t_env *env_list)
+{
+	char	*str;
+	int		count;
+
+	str = NULL;
+	count = *index;
+	while (in_put[count] && in_put[count] != ' ')
+	{
+		if (in_put[count] == '"' || in_put[count] == '\'')
+			str = ft_inside_qoutes(str, in_put, &count, env_list);
+		else if (in_put[count] == '$')
+			str = ft_join_free_both(str, ft_get_expand_var(in_put, &count, env_list));
+		else
+			str = ft_join_free_both(str, ft_substr(&in_put[count], 0, 1));
+		count ++;
+	}
+	if(!in_put[count])
+		count --;
+	*index = count;
+	return (str);
+}
+
+char	**ft_new_lexer(char *in_put, t_env *env_list)
+{
+	char	**cmd_table;
+	char	*str;
+	int		count;
+	int		index;
+
+	count = -1;
+	index = -1;
+	cmd_table = (char **)ft_calloc(sizeof(char *), 1);
+	if (!cmd_table)
+		return (NULL);
+	while (in_put[++count])
+	{
+		// str = NULL;
+		// while (in_put[count] && in_put[count] != ' ')
+		// {
+		// 	if (in_put[count] == '"' || in_put[count] == '\'')
+		// 		str = ft_inside_qoutes(str, in_put, &count, env_list);
+		// 	else if (in_put[count] == '$')
+		// 		str = ft_join_free_both(str, ft_get_expand_var(in_put, &count, env_list));
+		// 	else
+		// 		str = ft_join_free_both(str, ft_substr(&in_put[count], 0, 1));
+		// 	count ++;
+		// }
+		// if (!in_put[count])
+		// 	count --;
+		str = ft_tokenize(in_put, &count, env_list);
+		cmd_table = ft_cmd_table(cmd_table, str, ++index);
+	}
+	return (cmd_table);
+}
+
 t_cmds	*ft_parser(char *in_put, t_env *env_list)
 {
-	t_cmds	*cmd;
+	// t_cmds	*cmd;
+	//
+	// cmd = (t_cmds *)ft_calloc(1, sizeof(t_cmds));
+	// cmd->skip_char = ft_isnspace_indx(in_put);
+	// cmd->cmd = ft_lexer(cmd, &in_put[cmd->skip_char], env_list);
+	// ft_get_args(cmd, in_put, env_list);
+	// ft_after_redirect(cmd, env_list);
+	char	**cmd_table;
+	int		count;
 
-	(void) env_list;
-	cmd = (t_cmds *)ft_calloc(1, sizeof(t_cmds));
-	cmd->skip_char = ft_isnspace_indx(in_put);
-	cmd->cmd = ft_lexer(cmd, &in_put[cmd->skip_char], env_list);
-	ft_get_args(cmd, in_put, env_list);
-	ft_after_redirect(cmd, env_list);
-	return (cmd);
+	count = ft_isnspace_indx(in_put);
+	cmd_table = ft_new_lexer(&in_put[count], env_list);
+	count = 0;
+	while (cmd_table[count])
+	{
+		printf("%s\n", cmd_table[count]);
+		count ++;
+	}
+	return (NULL);
 }
 
 /* Used to free any double string */
