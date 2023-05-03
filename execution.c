@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/24 19:09:46 by melkholy          #+#    #+#             */
-/*   Updated: 2023/05/02 20:20:50 by melkholy         ###   ########.fr       */
+/*   Updated: 2023/05/03 19:48:12 by melkholy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@ int	ft_cmd_size(t_cmds *cmd)
 
 void	ft_execute_buildin(t_cmds *cmd, t_env **env_list)
 {
+	if (!cmd->cmd)
+		return ;
 	if (!ft_strcmp(cmd->cmd, "export"))
 		ft_export(cmd->args, env_list);
 	else if (!ft_strcmp(cmd->cmd, "env"))
@@ -114,36 +116,68 @@ void	ft_outfile_fd(char *to_file, int redirect)
 	close(outfile);
 }
 
-void	ft_here_doc(char **hdocs_end)
+char	*ft_expand_hdoc(char *hdocs_str, t_env *env_list)
+{
+	char	*str;
+	int		count;
+
+	count = 0;
+	str = NULL;
+	while (hdocs_str[count])
+	{
+		if (hdocs_str[count] == '$')
+			str = ft_join_free_both(str,
+					ft_getenv_var(hdocs_str, &count, env_list));
+		else
+			str = ft_join_free_both(str, ft_substr(&hdocs_str[count], 0, 1));
+		count ++;
+	}
+	free(hdocs_str);
+	return (str);
+}
+
+int	ft_read_hdocs(char *hdocs_end, t_env *env_list)
 {
 	char	*str;
 	char	*delimiter;
-	int		nofile;
+	int		fd;
 
-	delimiter = ft_strjoin(hdocs_end[0], "\n");
-	if (!access("minhell_tmp.txt", F_OK))
-		unlink("minhell_tmp.txt");
-	nofile = open("minhell_tmp.txt", O_RDWR | O_CREAT | O_APPEND, 0666);
+	delimiter = ft_strjoin(hdocs_end, "\n");
+	fd = open("minhell_tmp.txt", O_RDWR | O_CREAT | O_APPEND, 0666);
 	write(1, "heredoc> ", 9);
 	str = get_next_line(0);
 	while (ft_strcmp(str, delimiter))
 	{
-		write(nofile, str, ft_strlen(str));
+		if (ft_strchr(str, '$'))
+			str = ft_expand_hdoc(str, env_list);
+		write(fd, str, ft_strlen(str));
 		free(str);
 		write(1, "heredoc> ", 9);
 		str = get_next_line(0);
+		if (!str)
+			break ;
 	}
-	free(str);
 	free(delimiter);
-	close(nofile);
-	if (hdocs_end[1])
-		return ;
-	nofile = open("minhell_tmp.txt", O_RDONLY);
-	dup2(nofile, STDIN_FILENO);
-	close(nofile);
+	free(str);
+	return (fd);
 }
 
-void	ft_execute_redirection(t_cmds *cmd)
+void	ft_here_doc(char **hdocs_end, t_env *env_list)
+{
+	int		fd;
+
+	if (!access("minhell_tmp.txt", F_OK))
+		unlink("minhell_tmp.txt");
+	fd = ft_read_hdocs(hdocs_end[0], env_list);
+	close(fd);
+	if (hdocs_end[1])
+		return ;
+	fd = open("minhell_tmp.txt", O_RDONLY);
+	dup2(fd, STDIN_FILENO);
+	close(fd);
+}
+
+void	ft_execute_redirection(t_cmds *cmd, t_env *env_list)
 {
 	int	count;
 
@@ -152,7 +186,7 @@ void	ft_execute_redirection(t_cmds *cmd)
 		ft_infile_fd(cmd);
 	if ((cmd->redirect & HEREDOC))
 		while (cmd->hdocs_end[++count])
-			ft_here_doc(&cmd->hdocs_end[count]);
+			ft_here_doc(&cmd->hdocs_end[count], env_list);
 	if ((cmd->redirect & OUTPUT) || (cmd->redirect & APPEND))
 	{
 		count = -1;
@@ -161,9 +195,9 @@ void	ft_execute_redirection(t_cmds *cmd)
 	}
 }
 
-void	ft_execute_cmd(t_cmds *cmd, char **env_array)
+void	ft_execute_cmd(t_cmds *cmd, char **env_array, t_env *env_list)
 {
-	ft_execute_redirection(cmd);
+	ft_execute_redirection(cmd, env_list);
 	if (!cmd->full_cmd)
 		exit(1);
 	if (execve(cmd->full_cmd[0], cmd->full_cmd, env_array))
@@ -185,7 +219,7 @@ void	ft_cmd_analysis(t_cmds *cmd, t_env **env_list)
 		env_array = ft_create_env_array(*env_list);
 		pid = fork();
 		if (pid == 0)
-			ft_execute_cmd(cmd, env_array);
+			ft_execute_cmd(cmd, env_array, *env_list);
 		wait(NULL);
 		if ((cmd->redirect & HEREDOC))
 			unlink("minhell_tmp.txt");

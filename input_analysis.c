@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/05/02 19:58:12 by melkholy         ###   ########.fr       */
+/*   Updated: 2023/05/03 16:05:47 by melkholy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,6 +147,7 @@ void	ft_create_fullcmd(t_cmds *cmd)
 void	ft_parse_input(char *in_put, t_env **env_list)
 {
 	t_cmds	*cmd;
+	t_cmds	*tmp;
 	int		count;
 
 	count = 0;
@@ -157,8 +158,13 @@ void	ft_parse_input(char *in_put, t_env **env_list)
 	free(in_put);
 	if (!cmd)
 		return ;
-	ft_convertsyscommands(cmd, *env_list);
-	ft_create_fullcmd(cmd);
+	tmp = cmd;
+	while (tmp)
+	{
+		ft_convertsyscommands(cmd, *env_list);
+		ft_create_fullcmd(cmd);
+		tmp = tmp->next;
+	}
 	ft_cmd_analysis(cmd, env_list);
 	/* The rest of the function is for demonstration purposes
 	  to make sure the lexer is working well*/
