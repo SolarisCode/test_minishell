@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/24 19:09:46 by melkholy          #+#    #+#             */
-/*   Updated: 2023/05/11 00:36:05 by melkholy         ###   ########.fr       */
+/*   Updated: 2023/05/11 01:01:51 by melkholy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -204,7 +204,7 @@ void	ft_execute_cmd(t_cmds *cmd, char **env_array, t_env *env_list)
 	}
 }
 
-void	ft_cmd_analysis(t_cmds *cmd, t_env **env_list)
+void	ft_cmd_analysis(t_cmds *cmd, t_env *env_list)
 {
 	char	**env_array;
 	int		pid;
@@ -213,10 +213,10 @@ void	ft_cmd_analysis(t_cmds *cmd, t_env **env_list)
 		return ;
 	if (!ft_isnonsyscommand(cmd->cmd))
 	{
-		env_array = ft_create_env_array(*env_list);
+		env_array = ft_create_env_array(env_list);
 		pid = fork();
 		if (pid == 0)
-			ft_execute_cmd(cmd, env_array, *env_list);
+			ft_execute_cmd(cmd, env_array, env_list);
 		wait(NULL);
 		if ((cmd->redirect & HEREDOC))
 			unlink("minhell_tmp.txt");

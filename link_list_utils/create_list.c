@@ -36,11 +36,11 @@ t_env	*ft_get_envp(char **envp)
 	return (head);
 }
 
-t_mVariables	*ft_create_ls_pointers(char **envp)
+t_mVars	*ft_create_ls_pointers(char **envp)
 {
-	t_mVariables	*list_pointer;
+	t_mVars	*list_pointer;
 
-	list_pointer = (t_mVariables *)ft_calloc(1, sizeof(t_mVariables));
+	list_pointer = (t_mVars *)ft_calloc(1, sizeof(t_mVars));
 	list_pointer->ls_env = ft_get_envp(envp);
 	list_pointer->ls_export = ft_get_envp(envp);
 	list_pointer->ls_buffer = ft_get_envp(envp);

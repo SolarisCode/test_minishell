@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/05/03 16:05:47 by melkholy         ###   ########.fr       */
+/*   Updated: 2023/05/11 00:59:57 by melkholy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ void	ft_create_fullcmd(t_cmds *cmd)
 /* Used to check the input and pass it to the parsing and cutting
  functions to get back either a linked list with all the command original
  just one command in a node */
-void	ft_parse_input(char *in_put, t_env **env_list)
+void	ft_parse_input(char *in_put, t_env *env_list)
 {
 	t_cmds	*cmd;
 	t_cmds	*tmp;
@@ -117,14 +117,14 @@ void	ft_parse_input(char *in_put, t_env **env_list)
 	count += ft_isnspace_indx(in_put);
 	if (!in_put[count])
 		return ;
-	cmd = ft_text_analysis(&in_put[count], *env_list);
+	cmd = ft_text_analysis(&in_put[count], env_list);
 	free(in_put);
 	if (!cmd)
 		return ;
 	tmp = cmd;
 	while (tmp)
 	{
-		ft_convertsyscommands(cmd, *env_list);
+		ft_convertsyscommands(cmd, env_list);
 		ft_create_fullcmd(cmd);
 		tmp = tmp->next;
 	}

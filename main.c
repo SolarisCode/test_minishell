@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/05/11 00:37:38 by melkholy         ###   ########.fr       */
+/*   Updated: 2023/05/11 01:03:03 by melkholy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ void	ft_free_envlist(t_env **env_list)
 	}
 }
 
-void	ft_exit_minihell(char *str, t_env *env_list)
+void	ft_exit_minihell(char *str, t_mVars *list_pointers)
 {
 	tcsetattr(STDIN_FILENO, TCSANOW, &g_term_attr.save_attr);
 	if (!str)
@@ -72,7 +72,10 @@ void	ft_exit_minihell(char *str, t_env *env_list)
 		rl_redisplay();
 	}
 	free(str);
-	ft_free_envlist(&env_list);
+	ft_free_envlist(&list_pointers->ls_env);
+	ft_free_envlist(&list_pointers->ls_export);
+	ft_free_envlist(&list_pointers->ls_buffer);
+	free(list_pointers);
 	write(1, "exit\n", 5);
 	clear_history();
 	exit(0);
@@ -82,19 +85,18 @@ void	ft_exit_minihell(char *str, t_env *env_list)
 int	ft_read_prompt(char **envp)
 {
 	char	*str;
-	t_mVariables	*list_pointer;
+	t_mVars	*list_pointer;
 
 	list_pointer = ft_create_ls_pointers(envp);
-ft_print_list(list_pointer->ls_env, ft_print_char);
 	while (true)
 	{
 		str = readline(PROMPT);
 		if (!str || !ft_strcmp(str, "exit"))
-			ft_exit_minihell(str, list_pointer->ls_env);
+			ft_exit_minihell(str, list_pointer);
 		add_history(str);
 		if (ft_closing_qoutes(str))
 			continue ;
-		ft_parse_input(ft_strdup(str), &list_pointer->ls_env);
+		ft_parse_input(ft_strdup(str), list_pointer->ls_env);
 		free(str);
 	}
 }

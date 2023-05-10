@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/05/11 00:37:33 by melkholy         ###   ########.fr       */
+/*   Updated: 2023/05/11 01:02:19 by melkholy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,12 +53,12 @@ typedef struct s_env
 	struct s_env	*next;
 }				t_env;
 
-typedef struct s_mVariables
+typedef struct s_mVars
 {
 	t_env			*ls_env;
 	t_env			*ls_export;
 	t_env			*ls_buffer;
-}				t_mVariables;
+}				t_mVars;
 /* A global variable to store the term attributes and exit status */
 typedef struct s_term
 {
@@ -68,8 +68,6 @@ typedef struct s_term
 
 t_term	g_term_attr;
 
-int		ft_set_terminal(void);
-void	ft_quit_ignore(int sig);
 void	ft_convertsyscommands(t_cmds *cmd, t_env *envp);
 char	**ft_getpaths(t_env *envp);
 int		ft_checkpaths(char *command, char **paths);
@@ -95,17 +93,18 @@ int		ft_cd(char **args, t_env *envp);
 int		ft_pwd(void);
 int		ft_unset(char **args, t_env **envp);
 int		ft_echo(char **args);
-void	ft_cmd_analysis(t_cmds *cmd, t_env **env_list);
+void	ft_cmd_analysis(t_cmds *cmd, t_env *env_list);
 void	ft_execute_buildin(t_cmds *cmd, t_env **env_list);
 
-/* list_functions */
-t_env			*ft_create_envnode(char *string);
-t_mVariables	*ft_create_ls_pointers(char **envp);
-void			ft_print_list(t_env *head, void (*print)(void*));
-void			ft_print_char(void* data);
+/* link_list_utils/create_list.c */
+t_env	*ft_create_envnode(char *string);
+t_env	*ft_get_envp(char **envp);
+t_mVars	*ft_create_ls_pointers(char **envp);
+void	ft_print_list(t_env *head, void (*print)(void*));
+void	ft_print_char(void* data);
 
 /* input_analysis.c */
-void	ft_parse_input(char *in_put, t_env **env_list);
+void	ft_parse_input(char *in_put, t_env *env_list);
 void	ft_create_fullcmd(t_cmds *cmd);
 void	ft_free_cmdlist(t_cmds **cmds);
 
@@ -137,5 +136,15 @@ void	ft_free_dstr(char **str);
 char	**ft_check_args(char *arg, char **cmd_args);
 char	**ft_double_realloc(char **str, int old_size, int new_size);
 char	*ft_join_free_both(char *s1, char *s2);
+
+/* signals.c */
+void	ft_quit_ignore(int sig);
+int		ft_set_terminal(void);
+
+/* main.c */
+int		ft_read_prompt(char **envp);
+void	ft_exit_minihell(char *str, t_mVars *list_pointers);
+void	ft_free_envlist(t_env **env_list);
+int		ft_closing_qoutes(char *in_put);
 
 #endif
