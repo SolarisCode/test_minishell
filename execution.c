@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/24 19:09:46 by melkholy          #+#    #+#             */
-/*   Updated: 2023/05/03 19:48:12 by melkholy         ###   ########.fr       */
+/*   Updated: 2023/05/11 00:36:05 by melkholy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,23 +28,23 @@ int	ft_cmd_size(t_cmds *cmd)
 	return (count);
 }
 
-void	ft_execute_buildin(t_cmds *cmd, t_env **env_list)
-{
-	if (!cmd->cmd)
-		return ;
-	if (!ft_strcmp(cmd->cmd, "export"))
-		ft_export(cmd->args, env_list);
-	else if (!ft_strcmp(cmd->cmd, "env"))
-		ft_env(*env_list);
-	else if (!ft_strcmp(cmd->cmd, "cd"))
-		ft_cd(cmd->args, *env_list);
-	else if (!ft_strcmp(cmd->cmd, "pwd"))
-		ft_pwd();
-	else if (!ft_strcmp(cmd->cmd, "unset"))
-		ft_unset(cmd->args, env_list);
-	else if (!ft_strcmp(cmd->cmd, "echo"))
-		ft_echo(cmd->args);
-}
+// void	ft_execute_buildin(t_cmds *cmd, t_env **env_list)
+// {
+// 	if (!cmd->cmd)
+// 		return ;
+// 	if (!ft_strcmp(cmd->cmd, "export"))
+// 		ft_export(cmd->args, env_list);
+// 	else if (!ft_strcmp(cmd->cmd, "env"))
+// 		ft_env(*env_list);
+// 	else if (!ft_strcmp(cmd->cmd, "cd"))
+// 		ft_cd(cmd->args, *env_list);
+// 	else if (!ft_strcmp(cmd->cmd, "pwd"))
+// 		ft_pwd();
+// 	else if (!ft_strcmp(cmd->cmd, "unset"))
+// 		ft_unset(cmd->args, env_list);
+// 	else if (!ft_strcmp(cmd->cmd, "echo"))
+// 		ft_echo(cmd->args);
+// }
 
 char	**ft_create_env_array(t_env	*env_list)
 {
@@ -59,13 +59,10 @@ char	**ft_create_env_array(t_env	*env_list)
 	while (tmp_list)
 	{
 		str = NULL;
-		if (!tmp_list->custom)
-		{
-			str = ft_join_free_both(ft_strdup(tmp_list->var), ft_strdup("="));
-			str = ft_join_free_both(str, ft_strdup(tmp_list->value));
-			env_array[++index] = str;
-			env_array = ft_double_realloc(env_array, index + 1, index + 2);
-		}
+		str = ft_join_free_both(ft_strdup(tmp_list->var), ft_strdup("="));
+		str = ft_join_free_both(str, ft_strdup(tmp_list->value));
+		env_array[++index] = str;
+		env_array = ft_double_realloc(env_array, index + 1, index + 2);
 		tmp_list = tmp_list->next;
 	}
 	return (env_array);
@@ -228,7 +225,7 @@ void	ft_cmd_analysis(t_cmds *cmd, t_env **env_list)
 	}
 	else
 	{
-		ft_execute_buildin(cmd, env_list); //here causes segfault with envs
+		// ft_execute_buildin(cmd, env_list); //here causes segfault with envs
 		ft_free_cmdlist(&cmd);
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/05/01 16:22:32 by melkholy         ###   ########.fr       */
+/*   Updated: 2023/05/11 00:37:38 by melkholy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,14 +83,9 @@ int	ft_read_prompt(char **envp)
 {
 	char	*str;
 	t_mVariables	*list_pointer;
-	list_pointer = malloc(sizeof(t_mVariables));
-	list_pointer->ls_env = malloc(sizeof(t_env));
-	list_pointer->ls_export = malloc(sizeof(t_env));
-	list_pointer->ls_buffer = malloc(sizeof(t_env));
-	ft_create_list(list_pointer->ls_env, envp);
-	ft_create_list(list_pointer->ls_export, envp);
-	ft_create_list(list_pointer->ls_buffer, envp);
-//	ft_print_list(list_pointer->ls_env, ft_print_char);
+
+	list_pointer = ft_create_ls_pointers(envp);
+ft_print_list(list_pointer->ls_env, ft_print_char);
 	while (true)
 	{
 		str = readline(PROMPT);

@@ -6,7 +6,7 @@ void ft_pushfront_string_env(t_env **head_ref, char *data)
 {
 	t_env *new_node;
 
-	new_node = ft_create_envnode(data, 1);
+	new_node = ft_create_envnode(data);
 	new_node->next = (*head_ref);
 	*head_ref = new_node;
 }
@@ -74,7 +74,7 @@ t_env *ft_find_last_node(t_env *head_ref)
 void add_alphabetical(t_env **head_ref, char *string)
 {
 	t_env *new_node;
-	new_node = ft_create_envnode(string, 1);
+	new_node = ft_create_envnode(string);
 	if (*head_ref == NULL || ft_strcmp(string, (*head_ref)->var) < 0)
 	{
 		new_node->next = *head_ref;

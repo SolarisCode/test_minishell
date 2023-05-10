@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/05/02 19:08:37 by melkholy         ###   ########.fr       */
+/*   Updated: 2023/05/11 00:37:33 by melkholy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,10 +48,8 @@ typedef struct s_cmds
 
 typedef struct s_env
 {
-	int				index;
 	char			*var;
 	char			*value;
-	int				custom;
 	struct s_env	*next;
 }				t_env;
 
@@ -101,12 +99,10 @@ void	ft_cmd_analysis(t_cmds *cmd, t_env **env_list);
 void	ft_execute_buildin(t_cmds *cmd, t_env **env_list);
 
 /* list_functions */
-t_env	*ft_create_envnode(char *string, int index);
-void 	ft_create_list(t_env *head, char **array);
-void ft_add_back(t_env *head, char *string);
-t_env *find_last_node(t_env *head_ref);
-void 	ft_print_list(t_env *head, void (*print)(void*));
-void 	ft_print_char(void* data);
+t_env			*ft_create_envnode(char *string);
+t_mVariables	*ft_create_ls_pointers(char **envp);
+void			ft_print_list(t_env *head, void (*print)(void*));
+void			ft_print_char(void* data);
 
 /* input_analysis.c */
 void	ft_parse_input(char *in_put, t_env **env_list);

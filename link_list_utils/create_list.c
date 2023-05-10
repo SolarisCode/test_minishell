@@ -1,6 +1,6 @@
 #include "../minishell.h"
 
-t_env	*ft_create_envnode(char *string, int index)
+t_env	*ft_create_envnode(char *string)
 {
 	t_env	*node;
 	char	**str;
@@ -11,49 +11,38 @@ t_env	*ft_create_envnode(char *string, int index)
 	str = ft_split(string, '=');
 	node->var = ft_strdup(str[0]);
 	node->value = ft_strdup(str[1]);
-	node->index = index;
 	ft_free_dstr(str);
 	return (node);
 }
 
-void ft_create_list(t_env *head, char **array)
+t_env	*ft_get_envp(char **envp)
 {
-	int	i;
+	int		count;
+	t_env	*head;
+	t_env	*tmp;
 
-	i = 0;
-	while (array[i])
+	count = 0;
+	head = ft_create_envnode(envp[count]);
+	if (!head)
+		return (NULL);
+	tmp = head;
+	while (envp[++count])
 	{
-		ft_add_back(head, array[i]);
-		i++;
+		tmp->next = ft_create_envnode(envp[count]);
+		if (!tmp)
+			return (NULL);
+		tmp = tmp->next;
 	}
+	return (head);
 }
 
-t_env *find_last_node(t_env *head_ref)
+t_mVariables	*ft_create_ls_pointers(char **envp)
 {
-	t_env *current;
+	t_mVariables	*list_pointer;
 
-	current = head_ref;
-	while (current->next != NULL)
-		current = current->next;
-	printf("%s\n", current->var);
-	return (current);
-}
-
-void ft_add_back(t_env *head, char *string)
-{
-	t_env *node;
-	t_env *last_node;
-
-	node = ft_create_envnode(string, 1);
-	if (head == NULL)
-	{
-		head->next = node;
-		node->next = NULL;
-	}
-	else
-	{
-		last_node = find_last_node(head);
-		last_node->next = node;
-		node->next = NULL;
-	}
+	list_pointer = (t_mVariables *)ft_calloc(1, sizeof(t_mVariables));
+	list_pointer->ls_env = ft_get_envp(envp);
+	list_pointer->ls_export = ft_get_envp(envp);
+	list_pointer->ls_buffer = ft_get_envp(envp);
+	return (list_pointer);
 }

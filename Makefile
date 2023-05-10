@@ -6,7 +6,7 @@
 #    By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/28 10:47:26 by fvon-nag          #+#    #+#              #
-#    Updated: 2023/05/02 17:32:53 by melkholy         ###   ########.fr        #
+#    Updated: 2023/05/11 00:12:36 by melkholy         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,15 +20,15 @@ SOURCES = main.c \
 			signals.c \
 			syscommands.c \
 			syscommands_utils.c \
-			export.c \
+			execution.c \
+			link_list_utils/create_list.c \
+			link_list_utils/link_list.c \
+			# export.c \
 			export_no_args.c \
 			export_no_args_2.c \
 			export_w_args.c \
 			buildins.c \
 			buildins_2.c \
-			execution.c \
-			link_list_utils/create_list.c \
-			link_list_utils/link_list.c \
 
 
 NAME = minishell
