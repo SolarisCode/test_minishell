@@ -14,5 +14,8 @@
 
 void ft_execute_buildins(t_cmds *cmd, t_mVars *list_pointer)
 {
-
+	(void)list_pointer;
+	ft_echo(cmd);
+	ft_env(list_pointer);
+	ft_pwd();
 }

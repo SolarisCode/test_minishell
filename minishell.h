@@ -77,7 +77,6 @@ void	ft_freepaths(char **paths);
 int		ft_issyscommand(char *cmd, t_env *envp);
 int		ft_strcmp(char *s1, char *s2);
 int		ft_isnonsyscommand(char *arg);
-int		ft_env(t_env *envp);
 void	ft_addnewnode(char *arg, t_env *tmp, t_env **envp);
 int		ft_check_and_edit_existing_var(char **args, t_env *tmp, int i);
 int		ft_checklistlen(t_env *envp);
@@ -101,8 +100,11 @@ void	ft_printnextalpha(t_env *envp, int *indexprinted);
 /* builins */
 //void ft_cd(t_env *depot, int mode);
 void ft_unset(t_env **head_ref_env, t_env **head_ref_export, char *env_variable);
-void ft_echo(char *output);
+void ft_echo(t_cmds *node);
+void ft_pwd();
+void ft_env(t_mVars *list_pointer);
 void ft_export(t_env **head_ref_env, t_env **head_ref_export, char *data);
+void ft_execute_buildins(t_cmds *cmd, t_mVars *list_pointer);
 void ft_exit();
 
 /* builtin_utils */

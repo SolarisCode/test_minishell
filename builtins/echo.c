@@ -43,6 +43,7 @@ void ft_echo(t_cmds *node)
 	int fd;
 
 	i = 0;
+	fd = 0;
 	check_n = 0;
 	fd = redirect_echo(node, fd);
 	if (fd == 2)

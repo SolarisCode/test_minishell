@@ -23,6 +23,10 @@ SOURCES = main.c \
 			execution.c \
 			link_list_utils/create_list.c \
 			link_list_utils/link_list.c \
+			builtins/echo.c \
+			builtins/execute_buildins.c \
+			builtins/env.c \
+			builtins/pwd.c
 			# export.c \
 			export_no_args.c \
 			export_no_args_2.c \

@@ -6,7 +6,7 @@
 /*   By: estruckm <estruckm@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/15 19:40:56 by estruckm          #+#    #+#             */
-/*   Updated: 2023/04/15 19:41:24 by estruckm         ###   ########.fr       */
+/*   Updated: 2023/05/11 20:28:45 by estruckm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,11 +41,6 @@ void ft_unset(t_env **head_ref_env, t_env **head_ref_export, char *env_variable)
 {
 	unset_export(head_ref_env, env_variable);
 	unset_env(head_ref_export, env_variable);
-}
-
-void ft_echo(char *output)
-{
-	ft_putstring(output);
 }
 
 void ft_export(t_env **head_ref_env, t_env **head_ref_export, char *data)

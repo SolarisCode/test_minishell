@@ -225,7 +225,7 @@ void	ft_cmd_analysis(t_cmds *cmd, t_mVars *vars_list)
 	}
 	else
 	{
-		// ft_execute_buildin(cmd, env_list); //here causes segfault with envs
+		ft_execute_buildins(cmd, vars_list);
 		ft_free_cmdlist(&cmd);
 	}
 }
