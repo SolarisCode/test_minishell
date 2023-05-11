@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/05/11 00:59:57 by melkholy         ###   ########.fr       */
+/*   Updated: 2023/05/11 20:06:15 by melkholy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,48 @@
 // 	free(str);
 // 	return (cmd_table);
 // }
+char	*ft_find_envpath(t_env *env_list)
+{
+	t_env	*current;
+
+	current = env_list;
+	while (current)
+	{
+		if (!ft_strcmp("PATH", current->var))
+			return (current->value);
+		current = current->next;
+	}
+	return (NULL);
+}
+
+
+int	ft_add_path(t_cmds *cmd, t_env *env_list)
+{
+	char	*cmd_path;
+	char	**env_path;
+	int		count;
+
+	cmd_path = NULL;
+	count = -1;
+	env_path = ft_split(ft_find_envpath(env_list), ':');
+	while (env_path[++count])
+		env_path[count] = ft_strjoin_free(env_path[count], "/");
+	count = -1;
+	while (env_path[++count])
+	{
+		cmd_path = ft_strjoin(env_path[count], cmd->cmd);
+		if (!access(cmd_path, F_OK | X_OK))
+			break ;
+		free(cmd_path);
+		cmd_path = NULL;
+	}
+	ft_free_dstr(env_path);
+	if (!cmd_path)
+		return (printf("minihell: command not found: %s\n", cmd->cmd));
+	free(cmd->cmd);
+	cmd->cmd = cmd_path;
+	return (0);
+}
 
 void	ft_free_cmdlist(t_cmds **cmds)
 {
@@ -107,7 +149,7 @@ void	ft_create_fullcmd(t_cmds *cmd)
 /* Used to check the input and pass it to the parsing and cutting
  functions to get back either a linked list with all the command original
  just one command in a node */
-void	ft_parse_input(char *in_put, t_env *env_list)
+void	ft_parse_input(char *in_put, t_mVars *vars_list)
 {
 	t_cmds	*cmd;
 	t_cmds	*tmp;
@@ -117,18 +159,21 @@ void	ft_parse_input(char *in_put, t_env *env_list)
 	count += ft_isnspace_indx(in_put);
 	if (!in_put[count])
 		return ;
-	cmd = ft_text_analysis(&in_put[count], env_list);
+	cmd = ft_text_analysis(&in_put[count], vars_list->ls_buffer);
 	free(in_put);
 	if (!cmd)
 		return ;
 	tmp = cmd;
 	while (tmp)
 	{
-		ft_convertsyscommands(cmd, env_list);
+		// ft_convertsyscommands(cmd, env_list);
+		// if (!ft_add_path(cmd, env_list))
+		// 	ft_create_fullcmd(cmd);
+		ft_add_path(cmd, vars_list->ls_buffer);
 		ft_create_fullcmd(cmd);
 		tmp = tmp->next;
 	}
-//	ft_cmd_analysis(cmd, env_list);
+	ft_cmd_analysis(cmd, vars_list);
 	/* The rest of the function is for demonstration purposes
 	  to make sure the lexer is working well*/
 	// t_cmds *tmp;

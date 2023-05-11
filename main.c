@@ -6,17 +6,13 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/05/11 01:03:03 by melkholy         ###   ########.fr       */
+/*   Updated: 2023/05/11 20:08:42 by melkholy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include <stdio.h>
 
-//using an unused variable will input Command:/Users/fvon-nag/goinfre/.brew/bin/
-// most likely an null edge case for ft_tokennize could fix this
-// still segfautling for $variables
-// most likely due to the placement of buildin execution
 int	ft_closing_qoutes(char *in_put)
 {
 	char	divid;
@@ -85,25 +81,24 @@ void	ft_exit_minihell(char *str, t_mVars *list_pointers)
 int	ft_read_prompt(char **envp)
 {
 	char	*str;
-	t_mVars	*list_pointer;
+	t_mVars	*vars_list;
 
-	list_pointer = ft_create_ls_pointers(envp);
-	ft_print_list(list_pointer->ls_env, ft_print_char);
+	vars_list = ft_create_ls_pointers(envp);
+	ft_print_list(vars_list->ls_env, ft_print_char);
 
 	while (true)
 	{
 		str = readline(PROMPT);
 		if (!str || !ft_strcmp(str, "exit"))
-			ft_exit_minihell(str, list_pointer);
+			ft_exit_minihell(str, vars_list);
 		add_history(str);
 		if (ft_closing_qoutes(str))
 			continue ;
-		ft_parse_input(ft_strdup(str), list_pointer->ls_env);
+		ft_parse_input(ft_strdup(str), vars_list);
 		free(str);
 	}
 }
 
-// int	main(int argc, char **argv, char **envp)
 int	main(int argc, char **argv, char **envp)
 {
 	(void) argv;

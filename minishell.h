@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/05/11 01:02:19 by melkholy         ###   ########.fr       */
+/*   Updated: 2023/05/11 20:15:01 by melkholy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,9 +132,11 @@ void 	ft_add_back(t_env **head_ref, t_env *node);
 t_env 	*ft_create_node(char *var, char *value);
 
 /* input_analysis.c */
-void	ft_parse_input(char *in_put, t_env *env_list);
 void	ft_create_fullcmd(t_cmds *cmd);
 void	ft_free_cmdlist(t_cmds **cmds);
+char	*ft_find_envpath(t_env *env_list);
+int		ft_add_path(t_cmds *cmd, t_env *env_list);
+void	ft_parse_input(char *in_put, t_mVars *vars_list);
 
 /* lexer.c */
 char	*ft_expansion(char *str, t_env *env_list);
@@ -175,5 +177,16 @@ void	ft_exit_minihell(char *str, t_mVars *list_pointers);
 void	ft_free_envlist(t_env **env_list);
 int		ft_closing_qoutes(char *in_put);
 
-//ft_cmd_analysis(t_cmds *cmd, t_env *list);
+/* execution.c */
+int		ft_cmd_size(t_cmds *cmd);
+void	ft_infile_fd(t_cmds *cmd);
+char	**ft_create_env_array(t_env	*env_list);
+void	ft_outfile_fd(char *to_file, int redirect);
+char	*ft_expand_hdoc(char *hdocs_str, t_env *env_list);
+int		ft_read_hdocs(char *hdocs_end, t_env *env_list);
+void	ft_here_doc(char **hdocs_end, t_env *env_list);
+void	ft_execute_redirection(t_cmds *cmd, t_env *env_list);
+void	ft_execute_cmd(t_cmds *cmd, char **env_array, t_env *env_list);
+void	ft_cmd_analysis(t_cmds *cmd, t_mVars *vars_list);
+
 #endif
