@@ -3,13 +3,12 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+         #
+#    By: melkholy <melkholy@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2023/03/28 10:47:26 by fvon-nag          #+#    #+#              #
-#    Updated: 2023/05/11 23:56:04 by melkholy         ###   ########.fr        #
+#    Created: 2023/05/12 00:02:38 by melkholy          #+#    #+#              #
+#    Updated: 2023/05/12 00:02:40 by melkholy         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
-
 
 SOURCES = main.c \
 			parsing_utils.c \
