@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
+/*   By: melkholy <melkholy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/24 19:09:46 by melkholy          #+#    #+#             */
-/*   Updated: 2023/05/11 20:09:34 by melkholy         ###   ########.fr       */
+/*   Created: 2023/05/11 23:06:58 by melkholy          #+#    #+#             */
+/*   Updated: 2023/05/11 23:07:00 by melkholy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -204,6 +204,31 @@ void	ft_execute_cmd(t_cmds *cmd, char **env_array, t_env *env_list)
 	}
 }
 
+int	ft_strcmp(char *s1, char *s2)
+{
+	int	i;
+
+	i = 0;
+	while (s1[i] && s2[i] && s1[i] == s2[i])
+		++i;
+	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
+}
+
+int	ft_is_builtin(char* cmd)
+{
+	if (!cmd)
+		return (0);
+	if (!ft_strcmp(cmd, "echo") || !ft_strcmp(cmd, "/bin/echo")
+		|| !ft_strcmp(cmd, "pwd") || !ft_strcmp(cmd, "/bin/pwd")
+		|| !ft_strcmp(cmd, "export") || !ft_strcmp(cmd, "/usr/bin/export")
+		|| !ft_strcmp(cmd, "unset") || !ft_strcmp(cmd, "/usr/bin/unset")
+		|| !ft_strcmp(cmd, "env") || !ft_strcmp(cmd, "/usr/bin/env")
+		|| !ft_strcmp(cmd, "exit") || !ft_strcmp(cmd, "/usr/bin/exit")
+		|| !ft_strcmp(cmd, "cd"))
+		return (1);
+	return (0);
+}
+
 void	ft_cmd_analysis(t_cmds *cmd, t_mVars *vars_list)
 {
 	char	**env_array;
@@ -211,7 +236,7 @@ void	ft_cmd_analysis(t_cmds *cmd, t_mVars *vars_list)
 
 	if (ft_cmd_size(cmd) > 1)
 		return ;
-	if (!ft_isnonsyscommand(cmd->cmd))
+	if (!ft_is_builtin(cmd->cmd))
 	{
 		env_array = ft_create_env_array(vars_list->ls_buffer);
 		pid = fork();

@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 10:58:01 by fvon-nag          #+#    #+#             */
-/*   Updated: 2023/05/02 17:46:31 by melkholy         ###   ########.fr       */
+/*   Updated: 2023/05/11 21:37:47 by melkholy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,15 +27,6 @@ int	ft_issyscommand(char *cmd, t_env *envp)
 		return (0);
 }
 
-int	ft_strcmp(char *s1, char *s2)
-{
-	int	i;
-
-	i = 0;
-	while (s1[i] && s2[i] && s1[i] == s2[i])
-		++i;
-	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
-}
 
 int	ft_isnonsyscommand(char *arg)
 {

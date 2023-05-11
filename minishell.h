@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/05/11 20:15:01 by melkholy         ###   ########.fr       */
+/*   Updated: 2023/05/11 23:36:06 by melkholy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,6 @@ char	**ft_getpaths(t_env *envp);
 int		ft_checkpaths(char *command, char **paths);
 void	ft_freepaths(char **paths);
 int		ft_issyscommand(char *cmd, t_env *envp);
-int		ft_strcmp(char *s1, char *s2);
 int		ft_isnonsyscommand(char *arg);
 void	ft_addnewnode(char *arg, t_env *tmp, t_env **envp);
 int		ft_check_and_edit_existing_var(char **args, t_env *tmp, int i);
@@ -190,5 +189,8 @@ void	ft_here_doc(char **hdocs_end, t_env *env_list);
 void	ft_execute_redirection(t_cmds *cmd, t_env *env_list);
 void	ft_execute_cmd(t_cmds *cmd, char **env_array, t_env *env_list);
 void	ft_cmd_analysis(t_cmds *cmd, t_mVars *vars_list);
+int		ft_is_builtin(char* cmd);
+int		ft_strcmp(char *s1, char *s2);
+
 
 #endif

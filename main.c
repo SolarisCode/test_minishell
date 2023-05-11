@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
+/*   By: melkholy <melkholy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/05/11 20:08:42 by melkholy         ###   ########.fr       */
+/*   Created: 2023/05/11 23:06:18 by melkholy          #+#    #+#             */
+/*   Updated: 2023/05/11 23:06:26 by melkholy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,8 +84,6 @@ int	ft_read_prompt(char **envp)
 	t_mVars	*vars_list;
 
 	vars_list = ft_create_ls_pointers(envp);
-	ft_print_list(vars_list->ls_env, ft_print_char);
-
 	while (true)
 	{
 		str = readline(PROMPT);
