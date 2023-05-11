@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/05/11 23:36:06 by melkholy         ###   ########.fr       */
+/*   Updated: 2023/05/11 23:46:38 by melkholy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,6 @@ void ft_unset_env(t_env **head_ref, char *env_variable);
 void ft_unset_export(t_env **head_ref, char *env_variable);
 t_env *ft_get_env_node(t_env *head_ref, char *search);
 void ft_change_string_at_envPath(t_env *depot, char *search, char *new_string);
-char *ft_strncpy(char *source, char c);
 char *ft_get_new_path(t_env *depot);
 int ft_check_valid_env_variable(char *s);
 

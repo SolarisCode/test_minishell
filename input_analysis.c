@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/05/11 20:06:15 by melkholy         ###   ########.fr       */
+/*   Updated: 2023/05/11 23:54:45 by melkholy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,8 +169,9 @@ void	ft_parse_input(char *in_put, t_mVars *vars_list)
 		// ft_convertsyscommands(cmd, env_list);
 		// if (!ft_add_path(cmd, env_list))
 		// 	ft_create_fullcmd(cmd);
-		ft_add_path(cmd, vars_list->ls_buffer);
-		ft_create_fullcmd(cmd);
+		if (!ft_is_builtin(tmp->cmd) && tmp->cmd)
+			if (!ft_add_path(tmp, vars_list->ls_buffer))
+				ft_create_fullcmd(tmp);
 		tmp = tmp->next;
 	}
 	ft_cmd_analysis(cmd, vars_list);

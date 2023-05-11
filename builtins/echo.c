@@ -22,7 +22,7 @@ int redirect_echo(t_cmds *node, int fd)
 	int i;
 
 	i = 0;
-	if (!node->to_file[i])
+	if (!node->to_file)
 		return (1);
 	while (node->to_file[i])
 		i++;
