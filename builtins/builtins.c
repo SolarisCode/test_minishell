@@ -10,15 +10,13 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../inc/minishell.h"
+#include "../minishell.h"
 
-void cd(t_ms *depot, char *argument)
+void ft_cd(t_ms *depot, char *argument)
 {
 	pwd(depot, 0);
 	depot->old_path = depot->ms_cwd;
 	change_string_at_envPath(depot, "OLDPWD=", depot->old_path);
-	if (!argument)
-		chdir(depot->user_path);
 	else if (ft_strncmp(argument, "~", 1) == 0 || !argument)
 		chdir(depot->user_path);
 	else if (ft_strncmp(argument, "/", 1) == 0)
@@ -39,31 +37,18 @@ void cd(t_ms *depot, char *argument)
 	change_string_at_envPath(depot, "PWD=", depot->new_path);
 }
 
-void ms_env(t_env *head_ref)
-{
-	print_list(head_ref->ms_env, print_char);
-}
-
-void pwd(t_ms *depot, int mode)
-{
-	getcwd(depot->ms_cwd, 1000);
-	printf("after pwd\n");
-	if (mode == 1)
-		ft_putstring(depot->ms_cwd);
-}
-
-void unset(t_env **head_ref_env, t_env **head_ref_export, char *env_variable)
+void ft_unset(t_env **head_ref_env, t_env **head_ref_export, char *env_variable)
 {
 	unset_export(head_ref_env, env_variable);
 	unset_env(head_ref_export, env_variable);
 }
 
-void echo(char *output)
+void ft_echo(char *output)
 {
 	ft_putstring(output);
 }
 
-void export(t_env **head_ref_env, t_env **head_ref_export, char *data)
+void ft_export(t_env **head_ref_env, t_env **head_ref_export, char *data)
 {
 	t_env *search_node;
 

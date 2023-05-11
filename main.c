@@ -88,6 +88,8 @@ int	ft_read_prompt(char **envp)
 	t_mVars	*list_pointer;
 
 	list_pointer = ft_create_ls_pointers(envp);
+	ft_print_list(list_pointer->ls_env, ft_print_char);
+
 	while (true)
 	{
 		str = readline(PROMPT);

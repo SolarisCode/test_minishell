@@ -1,6 +1,6 @@
 #include "../../inc/minishell.h"
 
-int check_variable_argument(t_env *head_ref, char *data)
+int ft_check_variable_argument(t_env *head_ref, char *data)
 {
 	char **variable_path;
 	char **variable_new;
@@ -17,12 +17,12 @@ int check_variable_argument(t_env *head_ref, char *data)
 		return (ret);
 }
 
-int check_existence(t_env **head_ref, char *s)
-{
+//int ft_check_existence(t_env **head_ref, char *s)
+//{
+//
+//}
 
-}
-
-int check_valid_env_variable(char *s)
+int ft_check_valid_env_variable(char *s)
 {
 	int i;
 

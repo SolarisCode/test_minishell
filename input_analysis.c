@@ -128,7 +128,7 @@ void	ft_parse_input(char *in_put, t_env *env_list)
 		ft_create_fullcmd(cmd);
 		tmp = tmp->next;
 	}
-	ft_cmd_analysis(cmd, env_list);
+//	ft_cmd_analysis(cmd, env_list);
 	/* The rest of the function is for demonstration purposes
 	  to make sure the lexer is working well*/
 	// t_cmds *tmp;

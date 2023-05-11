@@ -30,13 +30,16 @@ void ft_print_list(t_env *head, void (*print)(void*))
 	}
 }
 
-void print_list_export(t_env *head, void (*print)(void*))
+void ft_print_list_export(t_env *head, void (*print)(void*))
 {
 	t_env *current = head;
 	while (current != NULL)
 	{
 		write(1, "declare -x ", 11);
 		(*print)(current->var);
+		write(1, "=", 1);
+		(*print)(current->value);
+		write(1, "\n", 1);
 		current = current->next;
 	}
 }
@@ -55,23 +58,12 @@ t_env	*ft_find_previous_node(t_env *head_ref, t_env *node)
 	return (current);
 }
 
-t_env *ft_find_last_node(t_env *head_ref)
-{
-	t_env *current;
-
-	current = head_ref;
-	while (current->next != NULL)
-		current = current->next;
-	printf("%s\n", current->var);
-	return (current);
-}
-
 //void sort_alphabetical(t_env **head_ref)
 //{
 //
 //}
 
-void add_alphabetical(t_env **head_ref, char *string)
+void ft_add_alphabetical(t_env **head_ref, char *string)
 {
 	t_env *new_node;
 	new_node = ft_create_envnode(string);
@@ -95,14 +87,14 @@ void add_alphabetical(t_env **head_ref, char *string)
 		new_node->next = current;
 	}
 }
-void swap(t_env *a, t_env *b)
+void ft_swap(t_env *a, t_env *b)
 {
 	char *temp = a->var;
 	a->var = b->var;
 	b->var = temp;
 }
 
-void sort_linked_list(t_env **head_ref)
+void ft_sort_linked_list(t_env **head_ref)
 {
 	if (*head_ref == NULL || (*head_ref)->next == NULL)
 		return;
@@ -117,7 +109,7 @@ void sort_linked_list(t_env **head_ref)
 		while (current->next != next)
 		{
 			if (strcmp(current->var, current->next->var) > 0) {
-				swap(current, current->next);
+				ft_swap(current, current->next);
 				swapped = 1;
 			}
 			current = current->next;
@@ -126,4 +118,33 @@ void sort_linked_list(t_env **head_ref)
 		if (!swapped)
 			break;
 	}
+}
+
+t_env *ft_find_last_node(t_env *head_ref)
+{
+	t_env *current;
+
+	current = head_ref;
+	while (current->next != NULL)
+		current = current->next;
+	return (current);
+}
+
+void ft_add_back(t_env **head_ref, t_env *node)
+{
+	t_env *last_node;
+
+	last_node = ft_find_last_node(*head_ref);
+	last_node->next = node;
+	node->next = NULL;
+
+}
+
+t_env *ft_create_node(char *var, char *value)
+{
+	t_env *node;
+	node = (t_env *)ft_calloc(1, sizeof(t_env));
+	node->var = ft_strdup(var);
+	node->value = ft_strdup(value);
+	return (node);
 }

@@ -1,24 +1,24 @@
 
 #include "../minishell.h"
 
-char  *get_user_path(t_ms *depot)
+char  *ft_get_user_path(char *path)
 {
 	char *user_path1;
 	char *user_path2;
 	char *user_path3;
 	char **cwd;
 
-	cwd = ft_split(depot->ms_cwd, '/');
+	cwd = ft_split(path, '/');
 	user_path1 = ft_strjoin("/", cwd[0]);
 	user_path2 = ft_strjoin(user_path1 , "/");
 	user_path3 = ft_strjoin(user_path2, cwd[1]);
 	free(user_path1);
 	free(user_path2);
-	ft_free_char_array(cwd);
+	ft_free_dstr(cwd);
 	return (user_path3);
 }
 
-void unset_env(t_env **head_ref, char *env_variable)
+void ft_unset_env(t_env **head_ref, char *env_variable)
 {
 	t_env *search_node;
 	t_env *previous_node;
@@ -37,7 +37,7 @@ void unset_env(t_env **head_ref, char *env_variable)
 	free(search_node);
 }
 
-void unset_export(t_env **head_ref, char *env_variable)
+void ft_unset_export(t_env **head_ref, char *env_variable)
 {
 	t_env *search_node;
 	t_env *previous_node;
@@ -56,23 +56,23 @@ void unset_export(t_env **head_ref, char *env_variable)
 	free(search_node);
 }
 
-t_env *get_env_node(t_env *head_ref, char *search)
+t_env *ft_get_env_node(t_env *head_ref, char *search)
 {
 	int n;
 	t_env *current;
 
-	current = head_ref;
-	n = ft_strlen(search);
+	if (!(head_ref))
+		return NULL;
 	while (current->next != NULL)
 	{
-		if (ft_strncmp(search, current->string, n) == 0)
+		if (!ft_strcmp(current->var, search))
 			return (current);
 		current = current->next;
 	}
 	return (NULL);
 }
 
-void change_string_at_envPath(t_ms *depot, char *search, char *new_string)
+void ft_change_string_at_envPath(t_ms *depot, char *search, char *new_string)
 {
 	t_env *node;
 	char *new_path_string;
@@ -123,7 +123,7 @@ int ft_strcmp(const char *s1, const char *s2)
 	return (*(const unsigned char *)s1 - *(const unsigned char *)s2);
 }
 
-char *get_new_path(t_ms *depot)
+char *ft_get_new_path(t_ms *depot)
 {
 	depot = NULL;
 	char cwd[1000];
