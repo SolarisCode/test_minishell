@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: melkholy <melkholy@student.42.fr>          +#+  +:+       +#+        */
+/*   By: estruckm <estruckm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 00:03:01 by melkholy          #+#    #+#             */
-/*   Updated: 2023/05/12 00:03:04 by melkholy         ###   ########.fr       */
+/*   Updated: 2023/05/12 14:47:15 by estruckm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,13 +101,14 @@ void	ft_printnextalpha(t_env *envp, int *indexprinted);
 void ft_unset(t_env **head_ref_env, t_env **head_ref_export, char *env_variable);
 void ft_echo(t_cmds *node);
 void ft_pwd();
+void ft_cd(t_cmds *args, t_mVars *list_pointer);
 void ft_env(t_mVars *list_pointer);
-void ft_export(t_env **head_ref_env, t_env **head_ref_export, char *data);
+void ft_export(t_cmds *cmd, t_mVars *list_pointer);
 void ft_execute_buildins(t_cmds *cmd, t_mVars *list_pointer);
 void ft_exit();
 
 /* builtin_utils */
-char  *ft_get_user_path(t_env *depot);
+// char  *ft_get_user_path(t_env *depot);
 void ft_unset_env(t_env **head_ref, char *env_variable);
 void ft_unset_export(t_env **head_ref, char *env_variable);
 t_env *ft_get_env_node(t_env *head_ref, char *search);
@@ -129,7 +130,9 @@ void 	ft_swap(t_env *a, t_env *b);
 void 	ft_sort_linked_list(t_env **head_ref);
 t_env 	*ft_find_last_node(t_env *head_ref);
 void 	ft_add_back(t_env **head_ref, t_env *node);
+t_env	*ft_create_envnode(char *string);
 t_env 	*ft_create_node(char *var, char *value);
+t_env *ft_create_newnode(char *value, char *var);
 
 /* input_analysis.c */
 void	ft_create_fullcmd(t_cmds *cmd);

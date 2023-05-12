@@ -139,12 +139,3 @@ void ft_add_back(t_env **head_ref, t_env *node)
 	node->next = NULL;
 
 }
-
-t_env *ft_create_node(char *var, char *value)
-{
-	t_env *node;
-	node = (t_env *)ft_calloc(1, sizeof(t_env));
-	node->var = ft_strdup(var);
-	node->value = ft_strdup(value);
-	return (node);
-}

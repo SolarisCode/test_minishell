@@ -20,18 +20,6 @@ int ft_check_variable_argument(t_env *head_ref, char *data)
 //int ft_check_existence(t_env **head_ref, char *s)
 //{
 //
-//}
-
-int ft_check_valid_env_variable(char *s)
-{
-	int i;
-
-	i = 0;
-	while (s[i])
-		if (s[i++] == '=')
-			return (0);
-	return (1);
-}
 
 //char *get_variable_name(char *string)
 //{

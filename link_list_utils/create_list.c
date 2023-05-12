@@ -15,6 +15,18 @@ t_env	*ft_create_envnode(char *string)
 	return (node);
 }
 
+t_env *ft_create_newnode(char *value, char *var)
+{
+	t_env *node;
+
+	node = (t_env *)ft_calloc(1, sizeof(t_env));
+	node->var = ft_strdup(var);
+	node->value = ft_strdup(value);
+	free(value);
+	free(var);
+	return (node);
+}
+
 t_env	*ft_get_envp(char **envp)
 {
 	int		count;
@@ -44,5 +56,6 @@ t_mVars	*ft_create_ls_pointers(char **envp)
 	list_pointer->ls_env = ft_get_envp(envp);
 	list_pointer->ls_export = ft_get_envp(envp);
 	list_pointer->ls_buffer = ft_get_envp(envp);
+	ft_sort_linked_list(&list_pointer->ls_export);
 	return (list_pointer);
 }

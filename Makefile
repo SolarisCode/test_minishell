@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: melkholy <melkholy@student.42.fr>          +#+  +:+       +#+         #
+#    By: estruckm <estruckm@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/05/12 00:02:38 by melkholy          #+#    #+#              #
-#    Updated: 2023/05/12 00:02:40 by melkholy         ###   ########.fr        #
+#    Updated: 2023/05/12 14:48:24 by estruckm         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,8 +23,11 @@ SOURCES = main.c \
 			builtins/echo.c \
 			builtins/execute_buildins.c \
 			builtins/env.c \
-			builtins/pwd.c
-
+			builtins/pwd.c \
+			builtins/cd.c \
+			builtins/export.c \
+			builtin_utils/builtins_utils.c \
+			builtins/builtins.c \
 
 NAME = minishell
 LIBFT = ./Libft/libft.a
@@ -49,4 +52,3 @@ fclean: clean
 re: fclean all
 
 .PHONY: all bonus libft clean fclean re
-
