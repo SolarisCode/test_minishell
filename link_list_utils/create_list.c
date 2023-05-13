@@ -3,15 +3,14 @@
 t_env	*ft_create_envnode(char *string)
 {
 	t_env	*node;
-	char	**str;
+	char *value;
+	char *var;
 
-	node = (t_env *)ft_calloc(1, sizeof(t_env));
-	if (!node)
-		return (NULL);
-	str = ft_split(string, '=');
-	node->var = ft_strdup(str[0]);
-	node->value = ft_strdup(str[1]);
-	ft_free_dstr(str);
+	value = get_value(string);
+	var = 	get_name(string);
+	node = malloc(sizeof(t_env));
+	node->var = var;
+	node->value = value;
 	return (node);
 }
 

@@ -25,9 +25,12 @@ SOURCES = main.c \
 			builtins/env.c \
 			builtins/pwd.c \
 			builtins/cd.c \
+			builtins/exit.c \
+			builtins/unset.c \
 			builtins/export.c \
+			builtins/check_buffer.c \
 			builtin_utils/builtins_utils.c \
-			builtins/builtins.c \
+			builtin_utils/export_utils_1.c \
 
 NAME = minishell
 LIBFT = ./Libft/libft.a

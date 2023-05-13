@@ -18,42 +18,22 @@
 // 	return (user_path3);
 // }
 
-void ft_unset_env(t_env **head_ref, char *env_variable)
+
+
+int	ft_own_strcmp(char *s1, char *s2)
 {
-	t_env *search_node;
-	t_env *previous_node;
+	int	i;
 
-	printf("check unset_env\n");
-
-	search_node = ft_get_env_node(*head_ref, env_variable);
-	if (search_node == NULL)
-		return;
-	previous_node = ft_find_previous_node(*head_ref, search_node);
-	if (search_node == *head_ref)
-		*head_ref = (*head_ref)->next;
-	else
-		previous_node->next = search_node->next;
-	free(search_node->value);
-	free(search_node);
-}
-
-void ft_unset_export(t_env **head_ref, char *env_variable)
-{
-	t_env *search_node;
-	t_env *previous_node;
-
-	printf("check unset_export\n");
-
-	search_node = ft_get_env_node(*head_ref, env_variable);
-	if (search_node == NULL)
-		return;
-	previous_node = ft_find_previous_node(*head_ref, search_node);
-	if (search_node == *head_ref)
-		*head_ref = (*head_ref)->next;
-	else
-		previous_node->next = search_node->next;
-	free(search_node->value);
-	free(search_node);
+	i = 0;
+	if (ft_strlen(s1) != ft_strlen(s2))
+		return (1);
+	while (s1[i] && s2[i])
+	{
+		if (s1[i] != s2[i])
+			return (1);
+		i++;
+	}
+	return (0);
 }
 
 t_env *ft_get_env_node(t_env *head_ref, char *search)
@@ -63,55 +43,15 @@ t_env *ft_get_env_node(t_env *head_ref, char *search)
 	if (!(head_ref))
 		return NULL;
 	current = head_ref;
-	while (current->next != NULL)
+	while (current != NULL)
 	{
-		if (!ft_strcmp(current->var, search))
+		if (ft_own_strcmp(current->var, search) == 0)
+		{
 			return (current);
+		}
 		current = current->next;
 	}
 	return (NULL);
-}
-
-//void ft_change_string_at_envPath(t_env *depot, char *search, char *new_string)
-//{
-//	t_env *node;
-//	char *new_path_string;
-//
-//	new_path_string = ft_strjoin(search, new_string);
-//	node = ft_get_env_node(depot->ms_env, search);
-//	free(node->string);
-//	node->string = NULL;
-//	node->string = malloc(sizeof(char) * (ft_strlen(new_path_string) + 1));
-//	node->string[ft_strlen(new_path_string)] = '\0';
-//	node->string = new_path_string;
-//}
-char *ft_strncpy(char *source, char c)
-{
-	int 	i;
-	int		j;
-	int 	len;
-	int n;
-	char 	*new_string;
-
-	len = ft_strlen(source);
-	new_string = (char *)malloc(sizeof(char) * len);
-	i = len;
-	n = 0;
-	j = 0;
-	while (source[i - 1] != c)
-	{
-		n++;
-		i--;
-	}
-	i = len - n - 1;
-	while (i >= 0)
-	{
-		new_string[j] = source[j];
-		i--;
-		j++;
-	}
-	new_string[j] = '\0';
-	return (new_string);
 }
 
 char *ft_get_new_path(t_env *head_ref)
@@ -128,39 +68,3 @@ char *ft_get_new_path(t_env *head_ref)
 	new_path[len] = '\0';
 		return (new_path);
 }
-
-//char	*get_folder_path(t_ms *depot)
-//{
-//	char	**path_folder;
-//	char	*command;
-//	char	*path_build;
-//	char	*command_path;
-//	int		i;
-//
-//	i = 0;
-//	path_folder = get_env_path("PWD", 3, depot->ms_env);
-//	free(command);
-//	while (path_folder[i])
-//	{
-//		path_build= ft_strjoin("/", path_folder[i]);
-//		command_path = ft_strjoin(path_folder[i++], command_built);
-//		if (access(command_path, F_OK | X_OK) == 0)
-//		{
-//			ft_free_char_array(path_folder);
-//			free(command_built);
-//			return (command_path);
-//		}
-//		free(command_path);
-//	}
-//	ft_free_char_array(path_folder);
-//	free(command_built);
-//	return (NULL);
-//}
-//
-//char	**get_command_arguments(char *arg)
-//{
-//	char	**arguments;
-//
-//	arguments = ft_split(arg, ' ');
-//	return (arguments);
-//}

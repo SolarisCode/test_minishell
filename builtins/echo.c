@@ -38,6 +38,39 @@ int redirect_echo(t_cmds *node, int fd)
 	}
 	return (fd);
 }
+// void ft_echo(t_cmds *node)
+// {
+// 	int i;
+// 	int check_n;
+// 	int fd;
+
+// 	i = 0;
+// 	check_n = 0;
+// 	fd = 1;
+// 	fd = redirect_echo(node, fd);
+// 	if (fd == 2)
+// 		return;
+// 	if (!node->args[i])
+// 		ft_putstr_fd("\n", fd);
+// 	while (node->args[i])
+// 	{
+// 		if (ft_check_n(node->args[i]) == 1)
+// 		{
+// 			ft_putstr_fd(node->args[i], fd);
+// 			if (node->args[i + 1])
+// 				ft_putstr_fd(" ", fd);
+// 		}
+// 		else
+// 			check_n = 1;
+// 		i++;
+// 	}
+// 	if (check_n == 0)
+// 		ft_putstr_fd("\n", fd);
+// }
+
+
+// printf("test\n");
+
 void ft_echo(t_cmds *node)
 {
 	int i;
@@ -45,28 +78,25 @@ void ft_echo(t_cmds *node)
 	int fd;
 
 	i = 0;
+	fd = 0;
 	check_n = 0;
-	fd = 1;
 	fd = redirect_echo(node, fd);
 	if (fd == 2)
 		return;
 	if (!node->args[i])
 		ft_putstr_fd("\n", fd);
+	if (ft_check_n(node->args[i]) == 0)
+		check_n = 1;
+	while (ft_check_n(node->args[i]) == 0)
+			i++;
 	while (node->args[i])
 	{
-		if (ft_check_n(node->args[i]) == 1)
-		{
-			ft_putstr_fd(node->args[i], fd);
-			if (node->args[i + 1])
-				ft_putstr_fd(" ", fd);
-		}
-		else
-			check_n = 1;
+		ft_putstr_fd(node->args[i], fd);
+		if (node->args[i + 1])
+			ft_putstr_fd(" ", fd);
 		i++;
 	}
 	if (check_n == 0)
 		ft_putstr_fd("\n", fd);
+
 }
-
-
-// printf("test\n");

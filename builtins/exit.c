@@ -1,6 +1,10 @@
 #include "../minishell.h"
 
-void ft_exit(t_mVars *list_pointer)
+void ft_exit(t_cmds *cmd, t_mVars *list_pointer)
 {
-	exit(1);
+	int pid;
+
+	pid = fork();
+	if (pid == 0)
+		exit(0);
 }

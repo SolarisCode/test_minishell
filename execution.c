@@ -224,7 +224,7 @@ int	ft_is_builtin(char* cmd)
 		|| !ft_strcmp(cmd, "unset") || !ft_strcmp(cmd, "/usr/bin/unset")
 		|| !ft_strcmp(cmd, "env") || !ft_strcmp(cmd, "/usr/bin/env")
 		|| !ft_strcmp(cmd, "exit") || !ft_strcmp(cmd, "/usr/bin/exit")
-		|| !ft_strcmp(cmd, "cd"))
+		|| !ft_strcmp(cmd, "cd") || !ft_strcmp(cmd, "check_buffer"))
 		return (1);
 	return (0);
 }

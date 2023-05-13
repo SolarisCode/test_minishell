@@ -59,7 +59,7 @@ void	ft_free_envlist(t_env **env_list)
 	}
 }
 
-void	ft_exit_minihell(char *str, t_mVars *list_pointers)
+void	ft_exit_minihell(char *str, t_cmds *cmd, t_mVars *list_pointers)
 {
 	tcsetattr(STDIN_FILENO, TCSANOW, &g_term_attr.save_attr);
 	if (!str)
@@ -67,7 +67,10 @@ void	ft_exit_minihell(char *str, t_mVars *list_pointers)
 		rl_on_new_line();
 		rl_redisplay();
 	}
-	free(str);
+	if (str)
+		free(str);
+	if (cmd)
+		ft_free_cmdlist(&cmd);
 	ft_free_envlist(&list_pointers->ls_env);
 	ft_free_envlist(&list_pointers->ls_export);
 	ft_free_envlist(&list_pointers->ls_buffer);
@@ -88,7 +91,7 @@ int	ft_read_prompt(char **envp)
 	{
 		str = readline(PROMPT);
 		if (!str || !ft_strcmp(str, "exit"))
-			ft_exit_minihell(str, vars_list);
+			ft_exit_minihell(str, NULL, vars_list);
 		add_history(str);
 		if (ft_closing_qoutes(str))
 			continue ;

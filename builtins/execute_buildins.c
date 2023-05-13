@@ -6,7 +6,7 @@
 /*   By: estruckm <estruckm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 18:24:17 by estruckm          #+#    #+#             */
-/*   Updated: 2023/05/12 14:21:57 by estruckm         ###   ########.fr       */
+/*   Updated: 2023/05/12 15:46:51 by estruckm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 void ft_execute_buildins(t_cmds *cmd, t_mVars *list_pointer)
 {
-	printf("test\n");
 	if (!ft_strcmp(cmd->cmd, "echo") || !ft_strcmp(cmd->cmd, "/bin/echo"))
 		ft_echo(cmd);
 	if (!ft_strcmp(cmd->cmd, "env") || !ft_strcmp(cmd->cmd, "/usr/bin/env"))
@@ -24,8 +23,11 @@ void ft_execute_buildins(t_cmds *cmd, t_mVars *list_pointer)
 	// if (!ft_strcmp(cmd->cmd, "cd") || !ft_strcmp(cmd->cmd, "/usr/bin/cd"))
 	// 	ft_cd(cmd, list_pointer);
 	if (!ft_strcmp(cmd->cmd, "export") || !ft_strcmp(cmd->cmd, "/usr/bin/export"))
-	{
-		printf("test\n");
 		ft_export(cmd, list_pointer);
-	}
+	if (!ft_strcmp(cmd->cmd, "check_buffer"))
+		ft_check_buffer(list_pointer);
+	if (!ft_strcmp(cmd->cmd, "unset") || !ft_strcmp(cmd->cmd, "/usr/bin/unset"))
+		ft_unset(cmd, list_pointer);
+	if (!ft_strcmp(cmd->cmd, "exit") || !ft_strcmp(cmd->cmd, "/usr/bin/exit"))
+		ft_exit(cmd, list_pointer);
 }

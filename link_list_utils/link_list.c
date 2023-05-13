@@ -39,6 +39,8 @@ void ft_print_list_export(t_env *head, void (*print)(void*))
 		(*print)(current->var);
 		write(1, "=", 1);
 		(*print)(current->value);
+		if (current->value[0] == '\0')
+			write(1, "''", 2);
 		write(1, "\n", 1);
 		current = current->next;
 	}
@@ -89,9 +91,14 @@ void ft_add_alphabetical(t_env **head_ref, char *string)
 }
 void ft_swap(t_env *a, t_env *b)
 {
-	char *temp = a->var;
+	char *temp1;
+	char *temp2;
+	temp1 = a->var;
+	temp2 = a->value;
 	a->var = b->var;
-	b->var = temp;
+	a->value = b->value;
+	b->var = temp1;
+	b->value = temp2;
 }
 
 void ft_sort_linked_list(t_env **head_ref)
@@ -106,9 +113,10 @@ void ft_sort_linked_list(t_env **head_ref)
 
 		swapped = 0;
 		current = *head_ref;
-		while (current->next != next)
+		while (current->next != NULL)
 		{
-			if (strcmp(current->var, current->next->var) > 0) {
+			if (strcmp(current->var, current->next->var) > 0)
+			{
 				ft_swap(current, current->next);
 				swapped = 1;
 			}
@@ -118,6 +126,13 @@ void ft_sort_linked_list(t_env **head_ref)
 		if (!swapped)
 			break;
 	}
+}
+
+void ft_free_node(t_env *node)
+{
+	free(node->value);
+	free(node->var);
+	free(node);
 }
 
 t_env *ft_find_last_node(t_env *head_ref)
@@ -133,9 +148,7 @@ t_env *ft_find_last_node(t_env *head_ref)
 void ft_add_back(t_env **head_ref, t_env *node)
 {
 	t_env *last_node;
-
 	last_node = ft_find_last_node(*head_ref);
 	last_node->next = node;
 	node->next = NULL;
-
 }
