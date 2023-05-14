@@ -75,7 +75,6 @@ void ft_update_variable(t_env *node, char *new_value)
 {
 	free(node->value);
 	node->value = NULL;
-	node->value = malloc(ft_strlen(new_value) + 1);
 	node->value = new_value;
 }
 
@@ -97,6 +96,9 @@ void update_or_create(t_env *list_pointer, char *string)
 	{
 		if (ft_check_validity(string) != 0)
 			ft_update_variable(search_node, value);
+		else
+			free(value);
+		free(var);
 	}
 //	free(value);
 }

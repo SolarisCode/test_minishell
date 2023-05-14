@@ -32,5 +32,4 @@ void ft_execute_buildins(t_cmds *cmd, t_mVars *list_pointer)
 		ft_exit(cmd, list_pointer);
 	if (!ft_strcmp(cmd->cmd, "cd"))
 		ft_cd(cmd, list_pointer);
-
 }

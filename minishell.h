@@ -63,7 +63,7 @@ typedef struct s_mVars
 	t_env			*ls_buffer;
 	char			*home;
 	char			cwd[1000];
-	int 			status_oldpwd;
+	char 			*old_path;
 }				t_mVars;
 /* A global variable to store the term attributes and exit status */
 typedef struct s_term
