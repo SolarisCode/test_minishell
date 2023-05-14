@@ -8,7 +8,7 @@ t_env	*ft_create_envnode(char *string)
 
 	value = get_value(string);
 	var = 	get_name(string);
-	node = malloc(sizeof(t_env));
+	node = (t_env *)ft_calloc(1, sizeof(t_env));
 	node->var = var;
 	node->value = value;
 	return (node);

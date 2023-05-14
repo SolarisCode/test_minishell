@@ -52,8 +52,14 @@ int ft_check_validity(char *s)
 
 	i = 0;
 	if (s[0] == '=')
-		return(1);
-
+		return 1;
+	while (s[i] && s[i] != '=')
+	{
+		if (ft_isalpha(s[i]) == 0 && ft_isdigit(s[i]) == 0 && s[i] != '_')
+			return 1;
+		i++;
+	}
+	i = 0;
 	while (s[i])
 	{
 		if (s[i] == '=' && s[i + 1] != '=' && s[i + 1] != '\0')
@@ -88,6 +94,9 @@ void update_or_create(t_env *list_pointer, char *string)
 		ft_add_back(&list_pointer, search_node);
 	}
 	else
-		ft_update_variable(search_node, value);
+	{
+		if (ft_check_validity(string) != 0)
+			ft_update_variable(search_node, value);
+	}
 //	free(value);
 }

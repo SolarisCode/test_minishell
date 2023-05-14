@@ -39,7 +39,7 @@ CFLAGS = -Wall -Wextra -Werror -g -I $(HOME)/goinfre/.brew/opt/readline/include/
 
 all: $(NAME)
 
-$(NAME): $(LIBFT)
+$(NAME): $(LIBFT) $(SOURCES)
 	$(CC) $(CFLAGS) $(LIBFT) -L$(HOME)/goinfre/.brew/opt/readline/lib/ -lreadline $(SOURCES) -o $(NAME)
 
 $(LIBFT):

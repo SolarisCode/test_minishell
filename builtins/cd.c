@@ -12,53 +12,85 @@
 
 #include "../minishell.h"
 
+void ft_create_add_variable(t_env *list_pointer, char *string)
+{
+	char *value;
+	char *var;
+	t_env *new_node;
 
-// void create_OLDPATH(t_mVars *list_pointer)
-// {
-// 	t_env *node;
-// 	char cwd[1000];
+	var = get_name(string);
+	new_node = ft_get_env_node(list_pointer, var);
+	value = get_value(string);
+	new_node = ft_create_newnode(value, var);
+	ft_add_back(&list_pointer, new_node);
+}
 
-// 	getcwd(cwd, 1000);
-// 	node = ft_get_env_node(list_pointer->ls_env, "OLDPWD");
-// 	if (node == NULL)
-// 	{
-// 		node = ft_create_node("OLDPWD", cwd);
-// 		ft_add_back(&list_pointer->ls_env, node);
-// 	}
-// }
+void ft_check_oldpath(t_mVars *list_pointer, int check)
+{
+	char *old_path_string;
+	t_env *old_path;
+	getcwd(list_pointer->cwd, 1000);
 
-// void ft_cd(t_cmds *args, t_mVars *list_pointer)
-// {
-// 	char cwd[1000];
-// 	t_env *node;
-// 	(void)node;
-// 	getcwd(cwd, 1000);
-// 	create_OLDPATH(list_pointer);
-// 	if (!args->args[0] || !ft_strcmp(args->args[0], "~"))
-// 	{
-// 		printf("test\n");
-// 		chdir(ft_get_env_node(list_pointer->ls_buffer, "HOME")->value);
-// 	}
-// 	else if (ft_strncmp(args->args[0], "/", 1) == 0)
-// 		chdir("/");
-// 	// else if (ft_strncmp(args->args[0], "..", 2) == 0)
-// 	// {
-// 	// 	chdir(get_new_pathlist_pointer->ls_env));
-// 	// }
-// 	else if (opendir(args->args[0]))
-// 	{
-// 		chdir(args->args[0]);
-// 		closedir((DIR *)args->args[0]);
-// 	}
-// 	else
-// 	{
-// 		ft_putstr_fd("cd: no such file or directory: ", 1);
-// 		ft_putstr_fd(args->args[0], 1);
-// 		ft_putstr_fd("\n", 1);
-// 	}
+	old_path_string = ft_strjoin("OLDPWD=", list_pointer->cwd);
+	old_path =  ft_get_env_node(list_pointer->ls_env, "OLDPWD");
 
+	if (check == 0 && old_path == NULL)
+	{
+		ft_create_add_variable(list_pointer->ls_env, old_path_string);
+		ft_create_add_variable(list_pointer->ls_export, old_path_string);
+		ft_create_add_variable(list_pointer->ls_buffer, old_path_string);
+	}
+	if (check == 1 && old_path != NULL)
+	{
+		ft_update_variable(ft_get_env_node(list_pointer->ls_env, "OLDPWD"), old_path_string);
+		ft_update_variable(ft_get_env_node(list_pointer->ls_export, "OLDPWD"), old_path_string);
+		ft_update_variable(ft_get_env_node(list_pointer->ls_buffer, "OLDPWD"), old_path_string);
+	}
+}
 
+void ft_check_pwd(t_mVars *list_pointer, int check)
+{
+	char *pwd_path_string;
+	t_env *pwd_path;
+	getcwd(list_pointer->cwd, 1000);
 
+	pwd_path_string = ft_strjoin("PWD=", list_pointer->cwd);
+	pwd_path =  ft_get_env_node(list_pointer->ls_env, "PWD");
+	if (check == 0 && pwd_path == NULL)
+	{
+		ft_create_add_variable(list_pointer->ls_env, pwd_path_string);
+		ft_create_add_variable(list_pointer->ls_export, pwd_path_string);
+		ft_create_add_variable(list_pointer->ls_buffer, pwd_path_string);
+	}
+	if (check == 1 && pwd_path != NULL)
+	{
+		ft_update_variable(ft_get_env_node(list_pointer->ls_env, "OLDPWD"), pwd_path_string);
+		ft_update_variable(ft_get_env_node(list_pointer->ls_export, "OLDPWD"), pwd_path_string);
+		ft_update_variable(ft_get_env_node(list_pointer->ls_buffer, "OLDPWD"), pwd_path_string);
+	}
+}
 
-// }
+void ft_cd(t_cmds *cmd, t_mVars *list_pointer)
+{
+	static int check;
 
+	check = 0;
+
+	ft_check_oldpath(list_pointer, check);
+
+	if (ft_strcmp(cmd->args[0], "_") == 0)
+		chdir(list_pointer->cwd);
+	if (ft_strcmp(cmd->args[0], "..") == 0)
+		chdir(ft_get_new_path(list_pointer->cwd));
+	if (ft_strcmp(cmd->args[0], "~") == 0)
+		chdir(list_pointer->home);
+	if (ft_strcmp(cmd->args[0], "/") == 0)
+		chdir("/");
+	else
+	{
+		chdir(cmd->args[0]);
+	}
+	ft_check_pwd(list_pointer, check);
+	ft_sort_linked_list(&list_pointer->ls_export);
+	check = 1;
+}

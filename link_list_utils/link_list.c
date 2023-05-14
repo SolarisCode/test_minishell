@@ -38,9 +38,9 @@ void ft_print_list_export(t_env *head, void (*print)(void*))
 		write(1, "declare -x ", 11);
 		(*print)(current->var);
 		write(1, "=", 1);
+		write(1, "\"", 1);
 		(*print)(current->value);
-		if (current->value[0] == '\0')
-			write(1, "''", 2);
+		write(1, "\"", 1);
 		write(1, "\n", 1);
 		current = current->next;
 	}

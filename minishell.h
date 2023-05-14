@@ -55,11 +55,15 @@ typedef struct s_env
 	struct s_env	*next;
 }				t_env;
 
+
 typedef struct s_mVars
 {
 	t_env			*ls_env;
 	t_env			*ls_export;
 	t_env			*ls_buffer;
+	char			*home;
+	char			cwd[1000];
+	int 			status_oldpwd;
 }				t_mVars;
 /* A global variable to store the term attributes and exit status */
 typedef struct s_term
@@ -104,7 +108,7 @@ void	ft_check_buffer(t_mVars *list_pointer);
 /* builtin_utils */
 // char  *ft_get_user_path(t_env *depot);
 t_env	*ft_get_env_node(t_env *head_ref, char *search);
-char	*ft_get_new_path(t_env *depot);
+char	*ft_get_new_path(char *s);
 int		ft_check_valid_env_variable(char *s);
 
 // export_utils

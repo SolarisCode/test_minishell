@@ -54,17 +54,15 @@ t_env *ft_get_env_node(t_env *head_ref, char *search)
 	return (NULL);
 }
 
-char *ft_get_new_path(t_env *head_ref)
+char *ft_get_new_path(char *s)
 {
 	int len;
 	char *new_path;
-	t_env *node;
-	node = ft_get_env_node(head_ref, "PWD");
-	len = ft_strlen(node->value);
-	while (node->value[len - 1] != '/')
+	len = ft_strlen(s);
+	while (s[len - 1] != '/')
 		len--;
 	new_path = malloc(sizeof(char) * (len + 1));
-	ft_strlcpy(new_path, node->value, len);
+	ft_strlcpy(new_path, s, len);
 	new_path[len] = '\0';
 		return (new_path);
 }
