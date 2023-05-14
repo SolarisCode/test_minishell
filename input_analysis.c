@@ -6,7 +6,7 @@
 /*   By: melkholy <melkholy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 00:02:20 by melkholy          #+#    #+#             */
-/*   Updated: 2023/05/14 21:54:37 by melkholy         ###   ########.fr       */
+/*   Updated: 2023/05/15 00:12:43 by melkholy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -189,7 +189,8 @@ void	ft_check_assigning(t_cmds *cmd, t_mVars *vars_list)
 		update_or_create(vars_list->ls_buffer, cmd->cmd);
 	while (cmd->args && cmd->args[++count])
 	{
-		if (ft_check_validity(cmd->args[count]) == 2)
+		if (ft_check_validity(cmd->args[count]) == 2
+			|| ft_check_validity(cmd->args[count]) == 3)
 		{
 			if (ft_check_in_export(cmd->args[count], vars_list->ls_export))
 				update_or_create(vars_list->ls_buffer, cmd->args[count]);
@@ -227,7 +228,8 @@ void	ft_parse_input(char *in_put, t_mVars *vars_list)
 	tmp = cmd;
 	while (tmp)
 	{
-		if (tmp->cmd && ft_check_validity(tmp->cmd) == 2)
+		if (tmp->cmd && (ft_check_validity(tmp->cmd) == 2
+			|| ft_check_validity(tmp->cmd) == 3))
 			ft_check_assigning(tmp, vars_list);
 		if (tmp->cmd && !ft_is_builtin(tmp->cmd))
 			if (!ft_add_path(tmp, vars_list->ls_buffer))
