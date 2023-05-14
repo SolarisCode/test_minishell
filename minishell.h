@@ -6,7 +6,7 @@
 /*   By: estruckm <estruckm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 00:03:01 by melkholy          #+#    #+#             */
-/*   Updated: 2023/05/12 14:47:15 by estruckm         ###   ########.fr       */
+/*   Updated: 2023/05/14 23:46:54 by melkholy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ void	ft_cd(t_cmds *args, t_mVars *list_pointer);
 void	ft_env(t_mVars *list_pointer);
 void	ft_export(t_cmds *cmd, t_mVars *list_pointer);
 void	ft_execute_buildins(t_cmds *cmd, t_mVars *list_pointer);
-void 	ft_exit(t_cmds *cmd, t_mVars *list_pointer);
+void	ft_exit();
 void	ft_check_buffer(t_mVars *list_pointer);
 
 /* builtin_utils */

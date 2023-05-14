@@ -6,7 +6,7 @@
 /*   By: melkholy <melkholy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 00:02:20 by melkholy          #+#    #+#             */
-/*   Updated: 2023/05/12 00:02:23 by melkholy         ###   ########.fr       */
+/*   Updated: 2023/05/14 21:54:37 by melkholy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,6 +146,67 @@ void	ft_create_fullcmd(t_cmds *cmd)
 	cmd->full_cmd = full_cmd;
 }
 
+int	ft_check_in_export(char *str, t_env *ls_export)
+{
+	t_env	*in_export;
+	char	*name;
+
+	name = get_name(str);
+	in_export = ft_get_env_node(ls_export, name);
+	free(name);
+	if (in_export)
+	{
+		update_or_create(ls_export, str);
+		return (0);
+	}
+	return (1);
+}
+
+char	**ft_arrange_args(char **args)
+{
+	char	**new_args;
+	int		len;
+
+	if (!args[0] || !args[1])
+		return (NULL);
+	len = 0;
+	while (args[len])
+		len ++;
+	new_args = (char **)ft_calloc(len, sizeof(char *));
+	len = 0;
+	while (args[++len])
+		new_args[len - 1] = args[len];
+	return (new_args);
+}
+
+void	ft_check_assigning(t_cmds *cmd, t_mVars *vars_list)
+{
+	int		count;
+	char	**tmp;
+
+	count = -1;
+	if (ft_check_in_export(cmd->cmd, vars_list->ls_export))
+		update_or_create(vars_list->ls_buffer, cmd->cmd);
+	while (cmd->args && cmd->args[++count])
+	{
+		if (ft_check_validity(cmd->args[count]) == 2)
+		{
+			if (ft_check_in_export(cmd->args[count], vars_list->ls_export))
+				update_or_create(vars_list->ls_buffer, cmd->args[count]);
+		}
+		else
+			break;
+	}
+	free(cmd->cmd);
+	cmd->cmd = NULL;
+	if (!cmd->args || cmd->args[count])
+		return ;
+	cmd ->cmd = cmd->args[count];
+	tmp = cmd->args;
+	cmd->args = ft_arrange_args(&cmd->args[count]);
+	ft_free_dstr(tmp);
+}
+
 /* Used to check the input and pass it to the parsing and cutting
  functions to get back either a linked list with all the command original
  just one command in a node */
@@ -166,10 +227,9 @@ void	ft_parse_input(char *in_put, t_mVars *vars_list)
 	tmp = cmd;
 	while (tmp)
 	{
-		// ft_convertsyscommands(cmd, env_list);
-		// if (!ft_add_path(cmd, env_list))
-		// 	ft_create_fullcmd(cmd);
-		if (!ft_is_builtin(tmp->cmd) && tmp->cmd)
+		if (tmp->cmd && ft_check_validity(tmp->cmd) == 2)
+			ft_check_assigning(tmp, vars_list);
+		if (tmp->cmd && !ft_is_builtin(tmp->cmd))
 			if (!ft_add_path(tmp, vars_list->ls_buffer))
 				ft_create_fullcmd(tmp);
 		tmp = tmp->next;
