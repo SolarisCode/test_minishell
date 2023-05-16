@@ -6,7 +6,7 @@
 /*   By: melkholy <melkholy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 00:02:20 by melkholy          #+#    #+#             */
-/*   Updated: 2023/05/15 00:12:43 by melkholy         ###   ########.fr       */
+/*   Updated: 2023/05/16 18:05:19 by melkholy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,17 +146,19 @@ void	ft_create_fullcmd(t_cmds *cmd)
 	cmd->full_cmd = full_cmd;
 }
 
-int	ft_check_in_export(char *str, t_env *ls_export)
+int	ft_check_in_export(char *str, t_mVars *vars_list)
 {
 	t_env	*in_export;
 	char	*name;
 
 	name = get_name(str);
-	in_export = ft_get_env_node(ls_export, name);
+	in_export = ft_get_env_node(vars_list->ls_export, name);
 	free(name);
 	if (in_export)
 	{
-		update_or_create(ls_export, str);
+		update_or_create(vars_list->ls_export, str);
+		update_or_create(vars_list->ls_env, str);
+		update_or_create(vars_list->ls_buffer, str);
 		return (0);
 	}
 	return (1);
@@ -185,14 +187,14 @@ void	ft_check_assigning(t_cmds *cmd, t_mVars *vars_list)
 	char	**tmp;
 
 	count = -1;
-	if (ft_check_in_export(cmd->cmd, vars_list->ls_export))
+	if (ft_check_in_export(cmd->cmd, vars_list))
 		update_or_create(vars_list->ls_buffer, cmd->cmd);
 	while (cmd->args && cmd->args[++count])
 	{
 		if (ft_check_validity(cmd->args[count]) == 2
 			|| ft_check_validity(cmd->args[count]) == 3)
 		{
-			if (ft_check_in_export(cmd->args[count], vars_list->ls_export))
+			if (ft_check_in_export(cmd->args[count], vars_list))
 				update_or_create(vars_list->ls_buffer, cmd->args[count]);
 		}
 		else
