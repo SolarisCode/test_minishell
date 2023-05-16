@@ -19,10 +19,8 @@ t_env *ft_create_newnode(char *value, char *var)
 	t_env *node;
 
 	node = (t_env *)ft_calloc(1, sizeof(t_env));
-	node->var = ft_strdup(var);
-	node->value = ft_strdup(value);
-	free(value);
-	free(var);
+	node->var = var;
+	node->value = value;
 	return (node);
 }
 
@@ -55,6 +53,29 @@ t_mVars	*ft_create_ls_pointers(char **envp)
 	list_pointer->ls_env = ft_get_envp(envp);
 	list_pointer->ls_export = ft_get_envp(envp);
 	list_pointer->ls_buffer = ft_get_envp(envp);
+	ft_unset_list(&list_pointer->ls_export, "OLDPWD");
+	ft_unset_list(&list_pointer->ls_env, "OLDPWD");
+	ft_unset_list(&list_pointer->ls_buffer, "OLDPWD");
+	ft_create_cd_variables(list_pointer);
 	ft_sort_linked_list(&list_pointer->ls_export);
 	return (list_pointer);
+}
+
+void ft_create_cd_variables(t_mVars *list_pointer)
+{
+	t_env *old_path;
+	t_env *pwd_path;
+
+	old_path = ft_get_env_node(list_pointer->ls_env, "OLDPWD");
+	pwd_path = ft_get_env_node(list_pointer->ls_env, "PWD");
+	if (old_path == NULL)
+		list_pointer->check_oldpwd_path = UNSET_BEFORE;
+	else
+		list_pointer->check_oldpwd_path = SET;
+	if (pwd_path == NULL)
+		list_pointer->check_pwd_path = UNSET_BEFORE;
+	else
+		list_pointer->check_pwd_path = SET;
+	list_pointer->home = ft_get_env_node(list_pointer->ls_env, "HOME")->value;
+
 }

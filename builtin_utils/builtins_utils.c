@@ -45,7 +45,7 @@ t_env *ft_get_env_node(t_env *head_ref, char *search)
 	current = head_ref;
 	while (current != NULL)
 	{
-		if (ft_own_strcmp(current->var, search) == 0)
+		if (ft_strcmp(current->var, search) == 0)
 		{
 			return (current);
 		}
@@ -57,12 +57,20 @@ t_env *ft_get_env_node(t_env *head_ref, char *search)
 char *ft_get_new_path(char *s)
 {
 	int len;
+	int i;
 	char *new_path;
-	len = ft_strlen(s);
-	while (s[len - 1] != '/')
+	len = ft_strlen(s) - 1;
+	i = 0;
+	while (s[len] != '/')
 		len--;
+	if (len == 0)
+		len = 1;
 	new_path = malloc(sizeof(char) * (len + 1));
-	ft_strlcpy(new_path, s, len);
+	while (i < len)
+	{
+		new_path[i] = s[i];
+		i++;
+	}
 	new_path[len] = '\0';
-		return (new_path);
+	return (new_path);
 }

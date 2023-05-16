@@ -34,7 +34,9 @@
 #define HEREDOC 2
 #define OUTPUT 4
 #define APPEND 8
-
+#define UNSET_BEFORE 3
+#define UNSET_AFTER 4
+#define SET 5
 /* Node to store the commands in a linked list */
 typedef struct s_cmds
 {
@@ -64,6 +66,9 @@ typedef struct s_mVars
 	char			*home;
 	char			cwd[1000];
 	char 			*old_path;
+	int 			check_pwd_path;
+	int 			check_oldpwd_path;
+	int				check_cd_minus;
 }				t_mVars;
 /* A global variable to store the term attributes and exit status */
 typedef struct s_term
@@ -110,6 +115,7 @@ void	ft_check_buffer(t_mVars *list_pointer);
 t_env	*ft_get_env_node(t_env *head_ref, char *search);
 char	*ft_get_new_path(char *s);
 int		ft_check_valid_env_variable(char *s);
+void	ft_unset_list(t_env **list_pointer, char *string);
 
 // export_utils
 
@@ -133,6 +139,7 @@ void	ft_swap(t_env *a, t_env *b);
 void	ft_sort_linked_list(t_env **head_ref);
 t_env	*ft_find_last_node(t_env *head_ref);
 void	ft_add_back(t_env **head_ref, t_env *node);
+void	ft_create_cd_variables(t_mVars *list_pointer);
 t_env	*ft_create_envnode(char *string);
 t_env 	*ft_create_node(char *var, char *value);
 t_env	*ft_create_newnode(char *value, char *var);

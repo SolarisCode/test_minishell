@@ -31,6 +31,7 @@ SOURCES = main.c \
 			builtins/check_buffer.c \
 			builtin_utils/builtins_utils.c \
 			builtin_utils/export_utils_1.c \
+			builtin_utils/cd_utils_1.c \
 
 NAME = minishell
 LIBFT = ./Libft/libft.a
@@ -40,7 +41,7 @@ CFLAGS = -Wall -Wextra -Werror -g -I $(HOME)/goinfre/.brew/opt/readline/include/
 all: $(NAME)
 
 $(NAME): $(LIBFT) $(SOURCES)
-	$(CC) $(CFLAGS) $(LIBFT) -L$(HOME)/goinfre/.brew/opt/readline/lib/ -lreadline $(SOURCES) -o $(NAME)
+	$(CC) $(CFLAGS) $(LIBFT) -L$(HOME)/goinfre/.brew/opt/readline/lib/ -lreadline $(SOURCES) -o  $(NAME)
 
 $(LIBFT):
 	make -C Libft

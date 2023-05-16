@@ -36,7 +36,6 @@ char *get_name(char *string)
 	while (string[i] && string[i] != '=')
 		i++;
 	name = malloc(sizeof(char) * (i + 1));
-
 	while (j < i)
 	{
 		name[j] = string[j];
@@ -73,7 +72,8 @@ int ft_check_validity(char *s)
 
 void ft_update_variable(t_env *node, char *new_value)
 {
-	free(node->value);
+	printf("check\n");
+//	free(node->value);
 	node->value = NULL;
 	node->value = new_value;
 }
@@ -95,7 +95,9 @@ void update_or_create(t_env *list_pointer, char *string)
 	else
 	{
 		if (ft_check_validity(string) != 0)
+		{
 			ft_update_variable(search_node, value);
+		}
 		else
 			free(value);
 		free(var);
