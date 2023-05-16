@@ -6,7 +6,7 @@
 /*   By: estruckm <estruckm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 18:24:17 by estruckm          #+#    #+#             */
-/*   Updated: 2023/05/12 15:46:51 by estruckm         ###   ########.fr       */
+/*   Updated: 2023/05/14 23:43:41 by melkholy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void ft_execute_buildins(t_cmds *cmd, t_mVars *list_pointer)
 	if (!ft_strcmp(cmd->cmd, "unset") || !ft_strcmp(cmd->cmd, "/usr/bin/unset"))
 		ft_unset(cmd, list_pointer);
 	if (!ft_strcmp(cmd->cmd, "exit") || !ft_strcmp(cmd->cmd, "/usr/bin/exit"))
-		ft_exit(cmd, list_pointer);
+		ft_exit();
 	if (!ft_strcmp(cmd->cmd, "cd"))
 		ft_cd(cmd, list_pointer);
 }
