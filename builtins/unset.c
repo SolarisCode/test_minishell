@@ -29,11 +29,7 @@ void ft_unset(t_cmds *cmd, t_mVars *list_pointer)
 
 	i = 0;
 	if (!cmd->args)
-	{
-		ft_putstr_fd("unset: not enough arguments", 1);
-		ft_putstr_fd("\n", 1);
 		return;
-	}
 	while (cmd->args[i])
 	{
 		ft_unset_list(&list_pointer->ls_export, cmd->args[i]);
@@ -41,9 +37,7 @@ void ft_unset(t_cmds *cmd, t_mVars *list_pointer)
 		ft_unset_list(&list_pointer->ls_buffer, cmd->args[i]);
 		i++;
 	}
-	printf("%s\n", list_pointer->ls_export->var);
 }
-
 
 
 

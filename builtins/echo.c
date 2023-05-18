@@ -56,8 +56,11 @@ void ft_echo(t_cmds *node)
 	fd = redirect_echo(node, fd);
 	if (fd == 2)
 		return;
-	if (!node->args[i])
+	if (!node->args)
+	{
 		ft_putstr_fd("\n", fd);
+		return;
+	}
 	if (ft_check_n(node->args[i]) == 0)
 		check_n = 1;
 	while (ft_check_n(node->args[i]) == 0)
@@ -71,5 +74,4 @@ void ft_echo(t_cmds *node)
 	}
 	if (check_n == 0)
 		ft_putstr_fd("\n", fd);
-
 }

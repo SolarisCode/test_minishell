@@ -76,6 +76,8 @@ void ft_create_cd_variables(t_mVars *list_pointer)
 		list_pointer->check_pwd_path = UNSET_BEFORE;
 	else
 		list_pointer->check_pwd_path = SET;
-	list_pointer->home = ft_get_env_node(list_pointer->ls_env, "HOME")->value;
-
+	if (ft_get_env_node(list_pointer->ls_env, "HOME") == NULL)
+		list_pointer->home = NULL;
+	else
+		list_pointer->home = ft_strdup(ft_get_env_node(list_pointer->ls_env, "HOME")->value);
 }

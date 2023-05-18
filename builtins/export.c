@@ -2,10 +2,10 @@
 
 void error_msg(char *string)
 {
-	ft_putstr_fd("export: `", 1);
-	ft_putstr_fd(string, 1);
-	ft_putstr_fd("': not a valid identifier", 1);
-	ft_putstr_fd("\n", 1);
+	ft_putstr_fd("export: `", 2);
+	ft_putstr_fd(string, 2);
+	ft_putstr_fd("': not a valid identifier", 2);
+	ft_putstr_fd("\n", 2);
 }
 
 void check_export(char *string, t_env *list_pointer)

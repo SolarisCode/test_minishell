@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: melkholy <melkholy@student.42.fr>          +#+  +:+       +#+        */
+/*   By: estruckm <estruckm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 23:06:18 by melkholy          #+#    #+#             */
-/*   Updated: 2023/05/11 23:06:26 by melkholy         ###   ########.fr       */
+/*   Updated: 2023/05/18 01:07:57 by estruckm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,7 @@ void	ft_exit_minihell(char *str, t_cmds *cmd, t_mVars *list_pointers)
 	ft_free_envlist(&list_pointers->ls_env);
 	ft_free_envlist(&list_pointers->ls_export);
 	ft_free_envlist(&list_pointers->ls_buffer);
+	free(list_pointers->home);
 	free(list_pointers);
 	write(1, "exit\n", 5);
 	clear_history();

@@ -6,7 +6,7 @@
 #    By: estruckm <estruckm@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/05/12 00:02:38 by melkholy          #+#    #+#              #
-#    Updated: 2023/05/14 19:35:00 by melkholy         ###   ########.fr        #
+#    Updated: 2023/05/18 03:01:15 by estruckm         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,8 +18,9 @@ SOURCES = main.c \
 			input_analysis.c \
 			signals.c \
 			execution.c \
-			link_list_utils/create_list.c \
-			link_list_utils/link_list.c \
+			link_list_utils/link_list_utils_1.c \
+			link_list_utils/link_list_utils_2.c \
+			link_list_utils/link_list_utils_3.c \
 			builtins/echo.c \
 			builtins/execute_buildins.c \
 			builtins/env.c \
@@ -32,6 +33,7 @@ SOURCES = main.c \
 			builtin_utils/builtins_utils.c \
 			builtin_utils/export_utils_1.c \
 			builtin_utils/cd_utils_1.c \
+			builtin_utils/cd_utils_2.c \
 
 NAME = minishell
 LIBFT = ./Libft/libft.a
