@@ -6,13 +6,14 @@
 /*   By: estruckm <estruckm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 00:03:01 by melkholy          #+#    #+#             */
-/*   Updated: 2023/05/18 14:49:43 by estruckm         ###   ########.fr       */
+/*   Updated: 2023/05/18 18:44:46 by estruckm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
+/*all library includes */
 # include <stdio.h>
 # include <stdlib.h>
 # include <signal.h>
@@ -27,6 +28,8 @@
 # include <sys/stat.h>
 # include <fcntl.h>
 # include <dirent.h>
+
+/*all header inlcudes */
 # include "libft.h"
 # include "builtins.h"
 # include "execution.h"
