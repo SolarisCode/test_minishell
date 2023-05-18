@@ -3,14 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: melkholy <melkholy@student.42.fr>          +#+  +:+       +#+        */
+/*   By: estruckm <estruckm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 23:06:58 by melkholy          #+#    #+#             */
-/*   Updated: 2023/05/18 03:06:11 by melkholy         ###   ########.fr       */
+/*   Updated: 2023/05/18 14:40:23 by estruckm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Libft/libft.h"
 #include "minishell.h"
 #include <fcntl.h>
 #include <unistd.h>

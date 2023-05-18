@@ -3,14 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_redirection.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: melkholy <melkholy@student.42.fr>          +#+  +:+       +#+        */
+/*   By: estruckm <estruckm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/01 15:48:07 by melkholy          #+#    #+#             */
-/*   Updated: 2023/05/18 01:43:33 by melkholy         ###   ########.fr       */
+/*   Updated: 2023/05/18 14:40:55 by estruckm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Libft/libft.h"
 #include "minishell.h"
 
 char	*ft_add_io_file(char *old_file, char *new_file, int len)

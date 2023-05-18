@@ -1,4 +1,4 @@
-#include "../minishell.h"
+#include "minishell.h"
 
 void ft_unset_list(t_env **list_pointer, char *string)
 {

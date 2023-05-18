@@ -3,14 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   input_analysis.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: melkholy <melkholy@student.42.fr>          +#+  +:+       +#+        */
+/*   By: estruckm <estruckm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 00:02:20 by melkholy          #+#    #+#             */
-/*   Updated: 2023/05/18 01:34:05 by melkholy         ###   ########.fr       */
+/*   Updated: 2023/05/18 14:40:38 by estruckm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Libft/libft.h"
 #include "minishell.h"
 #include <stdio.h>
 #include <string.h>

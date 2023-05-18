@@ -6,11 +6,11 @@
 /*   By: estruckm <estruckm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 18:24:17 by estruckm          #+#    #+#             */
-/*   Updated: 2023/05/14 23:43:41 by melkholy         ###   ########.fr       */
+/*   Updated: 2023/05/18 14:39:48 by estruckm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "minishell.h"
 
 void ft_execute_buildins(t_cmds *cmd, t_mVars *list_pointer)
 {

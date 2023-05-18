@@ -1,14 +1,8 @@
 #ifndef BUILTINS_H
 # define BUILTINS_H
 
-# include "minishell.h"
+# include "structs.h"
 
-typedef struct s_cmds	t_cmds;
-typedef struct s_env	t_env;
-typedef struct s_mVars	t_mVars;
-typedef struct s_term	t_term;
-/* ################### builtins ################### */
-/* cd.c */
 void	ft_cd(t_cmds *args, t_mVars *list_pointer);
 void	ft_check_oldpath(t_mVars *list_pointer);
 void	ft_check_pwd(t_mVars *list_pointer);
@@ -76,5 +70,4 @@ void ft_print_list(t_env *head, void (*print)(void*));
 void ft_print_char(void* data);
 void ft_pushfront_string_env(t_env **head_ref, char *data);
 
-
-# endif
+#endif

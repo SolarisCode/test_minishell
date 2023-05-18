@@ -1,4 +1,4 @@
-#include "../minishell.h"
+#include "minishell.h"
 
 void ft_swap(t_env *a, t_env *b)
 {
