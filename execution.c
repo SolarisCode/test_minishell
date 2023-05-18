@@ -6,7 +6,7 @@
 /*   By: melkholy <melkholy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 23:06:58 by melkholy          #+#    #+#             */
-/*   Updated: 2023/05/11 23:07:00 by melkholy         ###   ########.fr       */
+/*   Updated: 2023/05/18 03:06:11 by melkholy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,25 +68,22 @@ char	**ft_create_env_array(t_env	*env_list)
 	return (env_array);
 }
 
-void	ft_infile_fd(t_cmds *cmd)
+int	ft_infile_fd(char *file)
 {
 	int	infile;
 
 	infile = 0;
-	if (!cmd->from_file)
-		return ;
-	if (access(cmd->from_file, F_OK | R_OK))
+	if (!file)
+		return (-1);
+	if (access(file, F_OK | R_OK))
 	{
-		if (access(cmd->from_file, F_OK))
+		if (access(file, F_OK))
 			g_term_attr.status = 1;
-		printf("minihell: %s: %s\n", strerror(errno), cmd->from_file);
+		printf("minihell: %s: %s\n", strerror(errno), file);
+		return (-1);
 	}
-	else
-	{
-		infile = open(cmd->from_file, O_RDONLY);
-		dup2(infile, STDIN_FILENO);
-		close(infile);
-	}
+	infile = open(file, O_RDONLY);
+	return (infile);
 }
 
 void	ft_outfile_fd(char *to_file, int redirect)
@@ -159,7 +156,7 @@ int	ft_read_hdocs(char *hdocs_end, t_env *env_list)
 	return (fd);
 }
 
-void	ft_here_doc(char **hdocs_end, t_env *env_list)
+int	ft_here_doc(char **hdocs_end, t_env *env_list)
 {
 	int		fd;
 
@@ -168,28 +165,36 @@ void	ft_here_doc(char **hdocs_end, t_env *env_list)
 	fd = ft_read_hdocs(hdocs_end[0], env_list);
 	close(fd);
 	if (hdocs_end[1])
-		return ;
+		return (-1);
 	fd = open("minhell_tmp.txt", O_RDONLY);
-	dup2(fd, STDIN_FILENO);
-	close(fd);
+	return (fd);
 }
 
 void	ft_execute_redirection(t_cmds *cmd, t_env *env_list)
 {
 	int	count;
+	int	fd;
 
 	count = -1;
-	if ((cmd->redirect & INPUT))
-		ft_infile_fd(cmd);
-	if ((cmd->redirect & HEREDOC))
-		while (cmd->hdocs_end[++count])
-			ft_here_doc(&cmd->hdocs_end[count], env_list);
-	if ((cmd->redirect & OUTPUT) || (cmd->redirect & APPEND))
+	fd = -1;
+	while (cmd->priority && cmd->priority[++count])
 	{
-		count = -1;
+		if (fd > 0)
+			close(fd);
+		if (cmd->priority[count] == '1')
+			fd = ft_infile_fd(*cmd->from_file++);
+		else if (cmd->priority[count] == '2')
+			fd = ft_here_doc(cmd->hdocs_end++, env_list);
+	}
+	if (fd > 0)
+	{
+		dup2(fd, STDIN_FILENO);
+		close(fd);
+	}
+	count = -1;
+	if ((cmd->redirect & OUTPUT) || (cmd->redirect & APPEND))
 		while (cmd->to_file[++count])
 			ft_outfile_fd(cmd->to_file[count], cmd->redirect);
-	}
 }
 
 void	ft_execute_cmd(t_cmds *cmd, char **env_array, t_env *env_list)
@@ -229,12 +234,72 @@ int	ft_is_builtin(char* cmd)
 	return (0);
 }
 
+int	**ft_create_pipes(int proc)
+{
+	int	**pipes;
+	int	*pip;
+	int	count;
+
+	pipes = (int **)ft_calloc(proc, sizeof(int *));
+	if (!pipes)
+		return (NULL);
+	count = 0;
+	while (count < proc)
+	{
+		pip = (int *)ft_calloc(2, sizeof(int));
+		if (!pip)
+			return (NULL);
+		if (pipe(pip) < 0)
+			perror("Pipe creation failed");
+		pipes[count] = pip;
+		count ++;
+	}
+	return (pipes);
+}
+
+int	*ft_create_pid(int proc)
+{
+	int	*pid;
+
+	pid = (int *)ft_calloc(proc, sizeof(int));
+	if (!pid)
+		return (NULL);
+	return (pid);
+}
+
+void	ft_test_cmd(t_cmds *cmd, char **env_array, t_env *env_list)
+{
+	ft_execute_redirection(cmd, env_list);
+	if (!cmd->full_cmd)
+		exit(1);
+	if (execve(cmd->full_cmd[0], cmd->full_cmd, env_array))
+	{
+		printf("minihell: %s:%s\n", strerror(errno), cmd->cmd);
+		exit(1);
+	}
+}
+
+// void	ft_many_cmd_exe(t_cmds *cmds, t_mVars *vars_list)
+// {
+// 	t_cmds	*tmp;
+// 	int		cmd_count;
+//
+// 	cmd_count = ft_cmd_size(cmds);
+// 	vars_list->pipefd = ft_create_pipes(cmd_count - 1);
+// 	vars_list->pids = ft_create_pid(cmd_count);
+// 	tmp = cmds;
+// 	while (tmp)
+// 	{
+//
+// 	}
+// }
+
 void	ft_cmd_analysis(t_cmds *cmd, t_mVars *vars_list)
 {
 	char	**env_array;
 	int		pid;
 
-	if (ft_cmd_size(cmd) > 1)
+	if (cmd->next)
 		return ;
 	if (!ft_is_builtin(cmd->cmd))
 	{

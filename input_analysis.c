@@ -6,7 +6,7 @@
 /*   By: melkholy <melkholy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 00:02:20 by melkholy          #+#    #+#             */
-/*   Updated: 2023/05/16 18:05:19 by melkholy         ###   ########.fr       */
+/*   Updated: 2023/05/18 01:34:05 by melkholy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,21 +15,21 @@
 #include <stdio.h>
 #include <string.h>
 
-// char	*ft_realloc(char *str, int old_size, int new_size)
-// {
-// 	char	*tmp;
-// 	int		count;
-//
-// 	tmp = (char *)ft_calloc(new_size + 1, sizeof(char));
-// 	count = 0;
-// 	while (count < old_size)
-// 	{
-// 		tmp[count] = str[count];
-// 		count ++;
-// 	}
-// 	free(str);
-// 	return (tmp);
-// }
+char	*ft_realloc(char *str, int old_size, int new_size)
+{
+	char	*tmp;
+	int		count;
+
+	tmp = (char *)ft_calloc(new_size + 1, sizeof(char));
+	count = 0;
+	while (count < old_size)
+	{
+		tmp[count] = str[count];
+		count ++;
+	}
+	free(str);
+	return (tmp);
+}
 
 // void	ft_arrange_args(t_cmds *cmd, int index, int len)
 // {
@@ -116,11 +116,13 @@ void	ft_free_cmdlist(t_cmds **cmds)
 		if (tmp->full_cmd)
 			ft_free_dstr(tmp->full_cmd);
 		if ((tmp->redirect & INPUT))
-			free(tmp->from_file);
+			ft_free_dstr(tmp->from_file);
 		if ((tmp->redirect & HEREDOC))
 			ft_free_dstr(tmp->hdocs_end);
 		if ((tmp->redirect & OUTPUT) || (tmp->redirect & APPEND))
 			ft_free_dstr(tmp->to_file);
+		if (tmp->priority)
+			free(tmp->priority);
 		free(tmp);
 		tmp = *cmds;
 	}
@@ -241,9 +243,9 @@ void	ft_parse_input(char *in_put, t_mVars *vars_list)
 	ft_cmd_analysis(cmd, vars_list);
 	/* The rest of the function is for demonstration purposes
 	  to make sure the lexer is working well*/
-	// t_cmds *tmp;
 	// tmp = cmd;
-
+	// int	cnt = -1;
+	//
 	// while (tmp)
 	// {
 	// 	count = 0;
@@ -256,9 +258,11 @@ void	ft_parse_input(char *in_put, t_mVars *vars_list)
 	// 	if ((tmp->redirect & INPUT))
 	// 		printf("From_file: %s\n", tmp->from_file);
 	// 	if ((tmp->redirect & HEREDOC))
-	// 		printf("Heredoc_end: %s\n", tmp->hdocs_end);
+	// 		while (cmd->hdocs_end[++cnt])
+	// 			printf("Heredoc_end: %s\n", tmp->hdocs_end[cnt]);
 	// 	if ((tmp->redirect & OUTPUT) || (tmp->redirect & APPEND))
-	// 		printf("To_file: %s\n", tmp->to_file);
+	// 		while (cmd->to_file[++cnt])
+	// 			printf("To_file: %s\n", tmp->to_file[cnt]);
 	// 	tmp = tmp->next;
 	// }
 	// ft_execute_buildin(cmd, env_list); //placing this here causes no problems

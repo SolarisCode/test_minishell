@@ -6,7 +6,7 @@
 /*   By: melkholy <melkholy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/01 15:48:07 by melkholy          #+#    #+#             */
-/*   Updated: 2023/05/03 01:17:42 by melkholy         ###   ########.fr       */
+/*   Updated: 2023/05/18 01:43:33 by melkholy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ int	ft_add_redirection(char **table, t_cmds *cmd, int index, int len)
 	int	redirect;
 
 	count = 0;
-	redirect = cmd->redirect;
+	redirect =ft_get_redirection(table[index]);
 	while (table[index][count] && (table[index][count] == '<' ||
 			table[index][count] == '>'))
 		count ++;
@@ -82,7 +82,8 @@ int	ft_add_redirection(char **table, t_cmds *cmd, int index, int len)
 	if (!table[index])
 		return (printf("%s `newline'\n", DIRECTION_ERR), 1);
 	if ((redirect & INPUT) == INPUT)
-		cmd->from_file = ft_add_io_file(cmd->from_file, table[index], len);
+		cmd->from_file = ft_many_redirect(cmd->from_file, table[index], len);
+		// cmd->from_file = ft_add_io_file(cmd->from_file, table[index], len);
 	else if ((redirect & HEREDOC) == HEREDOC)
 		cmd->hdocs_end = ft_many_redirect(cmd->hdocs_end, table[index], len);
 	else if ((redirect & OUTPUT) == OUTPUT || (redirect & APPEND) == APPEND)
@@ -107,6 +108,24 @@ int	ft_get_redirection(char *in_put)
 	return (result);
 }
 
+void	ft_apply_priority(t_cmds *cmd, int redirect)
+{
+	int		len;
+
+	if (redirect > 2)
+		return ;
+	len = 0;
+	if (!cmd->priority)
+	{
+		cmd->priority = (char *)ft_calloc(2, sizeof(char));
+		cmd->priority[0] = (char)(redirect + 48);
+		return ;
+	}
+	len = ft_strlen(cmd->priority);
+	cmd->priority = ft_realloc(cmd->priority, len, len + 1);
+	cmd->priority[len] = (char)(redirect + 48);
+}
+
 int	ft_check_redirect(t_cmds *cmd, char **cmd_table)
 {
 	int		count;
@@ -126,6 +145,7 @@ int	ft_check_redirect(t_cmds *cmd, char **cmd_table)
 			cmd->redirect |= redirect;
 			if (ft_add_redirection(cmd_table, cmd, count, len))
 				return (free(cmd_table), 1);
+			ft_apply_priority(cmd, redirect);
 			ft_arrange_table(cmd_table, count, len);
 			count --;
 		}

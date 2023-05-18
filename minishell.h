@@ -6,7 +6,7 @@
 /*   By: estruckm <estruckm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 00:03:01 by melkholy          #+#    #+#             */
-/*   Updated: 2023/05/18 02:59:40 by estruckm         ###   ########.fr       */
+/*   Updated: 2023/05/18 03:18:11 by melkholy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,9 +51,10 @@ struct s_cmds
 	char			*cmd;
 	char			**args;
 	char			**full_cmd;
-	char			*from_file;
+	char			**from_file;
 	char			**hdocs_end;
 	char			**to_file;
+	char			*priority;
 	int				redirect;
 	struct s_cmds	*next;
 };
@@ -73,6 +74,8 @@ struct s_mVars
 	t_env			*ls_buffer;
 	char			*home;
 	char			cwd[1000];
+	int				**pipefd;
+	int				*pids;
 	int 			check_pwd_path;
 	int 			check_oldpwd_path;
 	int				check_cd_minus;
@@ -153,25 +156,6 @@ void ft_print_list(t_env *head, void (*print)(void*));
 void ft_print_char(void* data);
 void ft_pushfront_string_env(t_env **head_ref, char *data);
 
-void	ft_convertsyscommands(t_cmds *cmd, t_env *envp);
-char	**ft_getpaths(t_env *envp);
-int		ft_checkpaths(char *command, char **paths);
-void	ft_freepaths(char **paths);
-int		ft_issyscommand(char *cmd, t_env *envp);
-int		ft_isnonsyscommand(char *arg);
-void	ft_addnewnode(char *arg, t_env *tmp, t_env **envp);
-int		ft_check_and_edit_existing_var(char **args, t_env *tmp, int i);
-int		ft_checklistlen(t_env *envp);
-void	ft_printinorder(t_env *envp, int *indexprinted);
-int		ft_isnotprinted(t_env *envp, int *indexprinted, int withcostumvars);
-int		ft_isbeforeinalph(char *varname, char *tmpvar);
-int		ft_isvalididentifier(char c);
-int		ft_checkforwrongargs(char **args);
-void	ft_setindexprinted(t_env *envp, int index, int *indexprinted);
-char	*ft_getvarname(char *arg);
-char	*ft_getvarvalue(char *arg);
-void	ft_printnextalpha(t_env *envp, int *indexprinted);
-
 /* input_analysis.c */
 void	ft_create_fullcmd(t_cmds *cmd);
 void	ft_free_cmdlist(t_cmds **cmds);
@@ -220,17 +204,18 @@ int		ft_closing_qoutes(char *in_put);
 
 /* execution.c */
 int		ft_cmd_size(t_cmds *cmd);
-void	ft_infile_fd(t_cmds *cmd);
+int		ft_infile_fd(char *file);
 char	**ft_create_env_array(t_env	*env_list);
 void	ft_outfile_fd(char *to_file, int redirect);
 char	*ft_expand_hdoc(char *hdocs_str, t_env *env_list);
 int		ft_read_hdocs(char *hdocs_end, t_env *env_list);
-void	ft_here_doc(char **hdocs_end, t_env *env_list);
+int		ft_here_doc(char **hdocs_end, t_env *env_list);
 void	ft_execute_redirection(t_cmds *cmd, t_env *env_list);
 void	ft_execute_cmd(t_cmds *cmd, char **env_array, t_env *env_list);
 void	ft_cmd_analysis(t_cmds *cmd, t_mVars *vars_list);
 int		ft_is_builtin(char* cmd);
 int		ft_strcmp(char *s1, char *s2);
+char	*ft_realloc(char *str, int old_size, int new_size);
 
 
 #endif
