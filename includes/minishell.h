@@ -6,7 +6,7 @@
 /*   By: estruckm <estruckm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 00:03:01 by melkholy          #+#    #+#             */
-/*   Updated: 2023/05/18 18:44:46 by estruckm         ###   ########.fr       */
+/*   Updated: 2023/05/18 19:34:29 by estruckm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@
 
 /*all header inlcudes */
 # include "libft.h"
+# include "link_list.h"
 # include "builtins.h"
 # include "execution.h"
 # include "parsing.h"
